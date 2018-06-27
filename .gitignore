@@ -1,0 +1,16 @@
+# Ignore all logfiles and tempfiles.
+/log/*.log
+/log/*.yml
+/tmp
+
+# Ignore vim swap files
+**.swp
+**.swo
+
+#ignore mac os x .ds_store
+.DS_Store
+
+# for ctags
+.tags
+
+.env
