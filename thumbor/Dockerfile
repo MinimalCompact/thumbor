@@ -20,7 +20,7 @@ RUN  \
         graphicsmagick \
         libgraphicsmagick++3 \
         libgraphicsmagick++1-dev \
-        libgraphicsmagick3 \
+        libgraphicsmagick-q16-3 \
         libboost-python-dev \
         libmemcached-dev \
         gifsicle=1.88* \
