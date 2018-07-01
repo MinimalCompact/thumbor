@@ -4,8 +4,8 @@
 /tmp
 
 # Ignore vim swap files
-**.swp
-**.swo
+*.swp
+*.swo
 
 #ignore mac os x .ds_store
 .DS_Store
