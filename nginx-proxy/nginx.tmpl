@@ -330,6 +330,8 @@ server {
 	include /etc/nginx/vhost.d/default;
 	{{ end }}
 
+    {{ template "thumbor" (dict "Proto" $proto "UpstreamName" $upstream_name "Containers" $containers) }}
+
 	location / {
 		{{ if eq $proto "uwsgi" }}
 		include uwsgi_params;
