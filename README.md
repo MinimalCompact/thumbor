@@ -1,6 +1,6 @@
 ![](https://s3.eu-west-2.amazonaws.com/minimal-compact/images/mc-thumbor.png "MinimalCompact Thumbor")
 
-# MinimalCompact thumbor
+# Minimal Compact thumbor
 
 The quickest way to run [thumbor](https://github.com/thumbor/thumbor).
 
