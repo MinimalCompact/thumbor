@@ -21,6 +21,7 @@ RUN  \
         libgraphicsmagick++3 \
         libgraphicsmagick++1-dev \
         libgraphicsmagick-q16-3 \
+        zlib1g-dev \
         libboost-python-dev \
         libmemcached-dev \
         gifsicle=1.88* \
@@ -47,8 +48,9 @@ RUN \
     ln /usr/lib/python2.7/dist-packages/cv.py /usr/local/lib/python2.7/cv.py
 
 ARG SIMD_LEVEL
-# pinning to 4.3.0 see https://github.com/uploadcare/pillow-simd/issues/17
-RUN if [ -n "$SIMD_LEVEL" ]; then pip uninstall -y pillow; CC="cc -m$SIMD_LEVEL" pip install --no-cache-dir -U --force-reinstall Pillow-SIMD==4.3.0.post0; fi
+# pinning to 5.1.1 see https://github.com/uploadcare/pillow-simd/issues/17
+RUN if [ -n "$SIMD_LEVEL" ]; then apt-get install -y -q libjpeg-dev zlib1g-dev; fi
+RUN if [ -n "$SIMD_LEVEL" ]; then pip uninstall -y pillow; CC="cc -m$SIMD_LEVEL" LDFLAGS=-L/usr/lib/x86_64-linux-gnu/ pip install --no-cache-dir -U --force-reinstall Pillow-SIMD==5.1.1.post0; fi
 
 COPY docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
