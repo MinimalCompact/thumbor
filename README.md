@@ -6,10 +6,9 @@ The quickest way to run [thumbor](https://github.com/thumbor/thumbor).
 
 Key Features and Goals:
 
-* The latest version of Thumbor and dependencies, in a docker image
+* The latest version of thumbor and dependencies, in a docker image
 * Supports both solo thumbor and multiprocess in one image
-* Nginx frontend using [nginx-proxy](https://github.com/jwilder/nginx-proxy)
-  with built-in caching (independent docker image)
+* Nginx frontend docker image with built-in caching, using [nginx-proxy](https://github.com/jwilder/nginx-proxy)
 * SIMD support via docker tags
 * remotecv docker image (for async smart cropping and feature detection)
 * Clear version tagging to match Thumbor versions
