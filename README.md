@@ -23,7 +23,8 @@ $ wget http://localhost/unsafe/500x150/i.imgur.com/Nfn80ck.png
 
 ## Recipes
 
-Check out the recipes folder for some examples (still work in progress)
+Check out the recipes folder for some examples (still work in progress).
+
 The recipes include comments to document how things should be set up and why.
 
 ## History
