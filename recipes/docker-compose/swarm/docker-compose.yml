@@ -1,0 +1,108 @@
+version: '3'
+services:
+  thumbor:
+    image: minimalcompact/thumbor
+    environment:
+      # VIRTUAL_HOST is picked up by nginx-proxy. Here's it's set for localhost
+      # but you usually need to point it to your domain, e.g. thumbor.example.com
+      - VIRTUAL_HOST=localhost
+      # THUMBOR_NUM_PROCESSES control how many processes run inside the container
+      # Normally this is set in connection with the number of CPU cores
+      # Note however that you can also use the docker-compose scale option to dynamically
+      # scale your thumbor instances
+      - THUMBOR_NUM_PROCESSES=4
+      # important security settings
+      - SECURITY_KEY= # ...
+      - ALLOW_UNSAFE_URL=False
+      # this would allow CORS from any origin (you can restrict to specific origins if you want)
+      - CORS_ALLOW_ORIGIN=*
+      - AWS_ACCESS_KEY_ID= # your AWS_ACCESS_KEY here
+      - AWS_SECRET_ACCESS_KEY= # your AWS_SECRET_ACCESS_KEY here
+      # for buckets with new signing algorithm (v4)
+      # - S3_USE_SIGV4=true
+      # - TC_AWS_REGION=eu-central-1
+      - TC_AWS_LOADER_BUCKET= # your S3 bucket
+      - LOADER=tc_aws.loaders.s3_loader
+      # - LOG_LEVEL=debug
+      - DETECTORS=['thumbor.detectors.queued_detector.queued_complete_detector']
+      - STORAGE=thumbor.storages.mixed_storage
+      - MIXED_STORAGE_FILE_STORAGE=thumbor.storages.file_storage
+      - MIXED_STORAGE_DETECTOR_STORAGE=tc_redis.storages.redis_storage
+      - RESULT_STORAGE=thumbor.result_storages.file_storage
+      # Cache storage settings
+      #
+      # storage keeps the original image files cached
+      - STORAGE_EXPIRATION_SECONDS=604800 # 1 week
+      # result storage keeps the image version files cached
+      - RESULT_STORAGE_EXPIRATION_SECONDS=14400 # 4 hours
+      - REDIS_STORAGE_SERVER_HOST=redis
+      - REDIS_STORAGE_SERVER_PORT=6379
+      - REDIS_STORAGE_SERVER_DB=0
+      - REDIS_QUEUE_SERVER_HOST=redis
+      - REDIS_QUEUE_SERVER_PORT=6379
+      - REDIS_QUEUE_SERVER_DB=0
+    volumes:
+      - logs:/logs
+      - data:/data
+    deploy:
+      # Note this would create 3 instances, each with THUMBOR_NUM_PROCESSES
+      # (for docker-compose, this is ignored, but can be controlled using
+      #  docker-compose up -d --scale thumbor=3)
+      replicas: 3
+    links:
+      - redis:redis
+    restart: always
+    networks:
+      - frontend
+  nginx-proxy:
+    image: minimalcompact/thumbor-nginx-proxy
+    environment:
+      # setting the DEFAULT_HOST to the same as the VIRTUAL_HOST above.
+      # Makes sure it works irrespective of the host name
+      # Normally this won't be necessary, but it helps for testing.
+      - DEFAULT_HOST=localhost
+    volumes:
+      # this is essential for nginx-proxy to detect docker containers, scaling etc
+      # see https://github.com/jwilder/nginx-proxy
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      # mapping the same data folder, to allow nginx-proxy to fetch images from cache
+      - ./data:/data
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+    networks:
+      - frontend
+  remotecv:
+    image: minimalcompact/remotecv
+    environment:
+      - REMOTECV_REDIS_HOST=redis
+      - REMOTECV_REDIS_PORT=6379
+      - REMOTECV_REDIS_DATABASE=0
+      - LOADER=remotecv_aws.loader
+      - AWS_ACCESS_KEY_ID= # your AWS_ACCESS_KEY here
+      - AWS_SECRET_ACCESS_KEY= # your AWS_SECRET_ACCESS_KEY here
+      - AWS_LOADER_BUCKET= # your S3 bucket
+    deploy:
+      replicas: 1
+    links:
+      - redis:redis
+    restart: always
+    networks:
+      - backend
+  redis:
+    image: redis:latest
+    deploy:
+      replicas: 1
+    restart: always
+    networks:
+      - frontend
+      - backend
+volumes:
+  data:
+    driver: local
+  logs:
+    driver: local
+networks:
+  frontend:
+  backend:

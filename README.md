@@ -13,7 +13,6 @@ Key Features and Goals:
 * SIMD support via docker tags
 * remotecv docker image (for async smart cropping and feature detection)
 * Clear version tagging to match Thumbor versions
-* TODO: Documentation via working recipes (e.g. docker-compose)
 
 ## Quick Start
 
@@ -21,6 +20,11 @@ Key Features and Goals:
 $ docker run -p 80:80 minimalcompact/thumbor
 $ wget http://localhost/unsafe/500x150/i.imgur.com/Nfn80ck.png
 ```
+
+## Recipes
+
+Check out the recipes folder for some examples (still work in progress)
+The recipes include comments to document how things should be set up and why.
 
 ## History
 
