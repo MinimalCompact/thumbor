@@ -21,9 +21,10 @@
     {{ $containers := .Containers }}
     {{ $autoWebp := (first (groupByKeys $containers "Env.AUTO_WEBP")) }}
     {{ $allowCors := (first (groupByKeys .Containers "Env.THUMBOR_ALLOW_CORS")) }}
+    {{ $corsOrigin := (first (groupByKeys .Containers "Env.CORS_ALLOW_ORIGIN")) }}
 
-    {{ if $allowCors }}
-        add_header 'Access-Control-Allow-Origin' '*';
+    {{ if or $allowCors $corsOrigin }}
+        add_header 'Access-Control-Allow-Origin' '{{ or $corsOrigin "*" }}';
         add_header 'Access-Control-Allow-Credentials' 'true';
         add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS';
         add_header 'Access-Control-Allow-Headers' 'Accept,Authorization,Cache-Control,Content-Type,DNT,If-Modified-Since,Keep-Alive,Origin,User-Agent,X-Mx-ReqToken,X-Requested-With';
