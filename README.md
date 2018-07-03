@@ -21,6 +21,14 @@ $ docker run -p 80:80 minimalcompact/thumbor
 $ wget http://localhost/unsafe/500x150/i.imgur.com/Nfn80ck.png
 ```
 
+multi-process
+
+```
+$ docker run -p 80:80 -e THUMBOR_NUM_PROCESSES=8 minimalcompact/thumbor
+$ wget http://localhost/unsafe/500x150/i.imgur.com/Nfn80ck.png
+
+```
+
 ## Recipes
 
 Check out the recipes folder for some examples (still work in progress).
