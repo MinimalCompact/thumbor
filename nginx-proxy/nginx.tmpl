@@ -15,25 +15,27 @@
     }
 {{ end }}
 
+{{ define "cors" }}
+    add_header 'Access-Control-Allow-Origin' '{{ or .CorsOrigin "*" }}';
+    add_header 'Access-Control-Allow-Credentials' 'true';
+    add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS';
+    add_header 'Access-Control-Allow-Headers' 'Accept,Authorization,Cache-Control,Content-Type,DNT,If-Modified-Since,Keep-Alive,Origin,User-Agent,X-Mx-ReqToken,X-Requested-With';
+{{ end }}
+
 {{ define "thumbor" }}
     {{ $proto := .Proto }}
     {{ $upstream_name := .UpstreamName }}
-    {{ $containers := .Containers }}
-    {{ $autoWebp := (first (groupByKeys $containers "Env.AUTO_WEBP")) }}
+    {{ $autoWebp := (first (groupByKeys .Containers "Env.AUTO_WEBP")) }}
     {{ $allowCors := (first (groupByKeys .Containers "Env.THUMBOR_ALLOW_CORS")) }}
     {{ $corsOrigin := (first (groupByKeys .Containers "Env.CORS_ALLOW_ORIGIN")) }}
-
-    {{ if or $allowCors $corsOrigin }}
-        add_header 'Access-Control-Allow-Origin' '{{ or $corsOrigin "*" }}';
-        add_header 'Access-Control-Allow-Credentials' 'true';
-        add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS';
-        add_header 'Access-Control-Allow-Headers' 'Accept,Authorization,Cache-Control,Content-Type,DNT,If-Modified-Since,Keep-Alive,Origin,User-Agent,X-Mx-ReqToken,X-Requested-With';
-    {{ end }}
 
     location ~* "^/(?<path>..)(?<path2>..)(.+)?$" {
         root        /data/result_storage/v2;
         expires     1M;
 
+        {{ if or $allowCors $corsOrigin }}
+            {{ template "cors" (dict "CorsOrigin" $corsOrigin) }}
+        {{ end }}
         {{ if $autoWebp }}
             try_files $webp_prefix/$path/$path2$uri =404;
             add_header Vary Accept;
@@ -53,6 +55,9 @@
 
     location @fetch {
         internal;
+        {{ if or $allowCors $corsOrigin }}
+            {{ template "cors" (dict "CorsOrigin" $corsOrigin) }}
+        {{ end }}
         proxy_pass {{ trim $proto }}://{{ trim $upstream_name }};
     }
 {{ end }}

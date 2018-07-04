@@ -13,6 +13,8 @@ services:
       - THUMBOR_NUM_PROCESSES=4
       # this would allow CORS from any origin (you can restrict to specific origins if you want)
       - CORS_ALLOW_ORIGIN=*
+      # returns a webp image if browser Accept headers match
+      - AUTO_WEBP=True
       # Basic thumbor setup to cache both original images and results (after manipulation)
       # nginx-proxy would detect if there's a cached version and serve it for you automatically
       # (this greatly speeds up and saves on CPU)
