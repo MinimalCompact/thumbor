@@ -1,3 +1,4 @@
-argparse==1.2.2
-redis==2.4.12
+argparse==1.4.0
+pyres==1.5
+redis==2.10.6
 remotecv_aws==0.1
