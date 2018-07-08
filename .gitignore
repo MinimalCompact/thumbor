@@ -14,3 +14,5 @@
 .tags
 
 .env
+
+recipes/**/data
