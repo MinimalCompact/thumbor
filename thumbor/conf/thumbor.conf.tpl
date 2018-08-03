@@ -663,6 +663,9 @@ TC_AWS_STORAGE_SSE = {{ TC_AWS_STORAGE_SSE | default(False) }}
 # https://aws.amazon.com/about-aws/whats-new/2010/05/19/announcing-amazon-s3-reduced-redundancy-storage/
 TC_AWS_STORAGE_RRS = {{ TC_AWS_STORAGE_RRS | default(False) }}
 
+# Add some randomization in the S3 keys for the Storage and Result Storage.
+# Defaults to False for Backwards Compatibility, set it to True for performance.
+TC_AWS_RANDOMIZE_KEYS = {{ TC_AWS_RANDOMIZE_KEYS | default(False) }}
 
 # Enable HTTP Loader as well?
 # This would allow you to load watermarks in over your images dynamically through a URI
