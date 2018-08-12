@@ -234,7 +234,11 @@ MAX_ID_LENGTH = {{ MAX_ID_LENGTH | default(32) }}
 
 ## Host to send statsd instrumentation to
 ## Defaults to: None
-STATSD_HOST = {{ STATSD_HOST | default(None) }}
+{% if STATSD_HOST is defined %}
+STATSD_HOST = '{{ STATSD_HOST }}'
+{% else %}
+STATSD_HOST = None
+{% endif %}
 
 ## Port to send statsd instrumentation to
 ## Defaults to: 8125
@@ -242,7 +246,11 @@ STATSD_PORT = {{ STATSD_PORT | default(8125) }}
 
 ## Prefix for statsd
 ## Defaults to: None
-STATSD_PREFIX = {{ STATSD_PREFIX | default(None) }}
+{% if STATSD_PREFIX is defined %}
+STATSD_PREFIX = '{{ STATSD_PREFIX }}'
+{% else %}
+STATSD_PREFIX = None
+{% endif %}
 
 ################################################################################
 
@@ -650,7 +658,12 @@ APP_CLASS = '{{ APP_CLASS | default('thumbor.app.ThumborServiceApp') }}'
 ############################## TC_AWS ##########################################
 TC_AWS_REGION = '{{ TC_AWS_REGION | default('eu-west-1') }}' # AWS Region
 
-TC_AWS_ENDPOINT = {{ TC_AWS_ENDPOINT | default(None) }} # Custom S3 endpoint URL (for GCP, Minio, etc.)
+# Custom S3 endpoint URL (for GCP, Minio, etc.)
+{% if TC_AWS_ENDPOINT is defined %}
+TC_AWS_ENDPOINT = '{{ TC_AWS_ENDPOINT }}'
+{% else %}
+TC_AWS_ENDPOINT = None
+{% endif %}
 
 TC_AWS_STORAGE_BUCKET = '{{ TC_AWS_STORAGE_BUCKET | default('') }}' # S3 bucket for Storage
 TC_AWS_STORAGE_ROOT_PATH = '{{ TC_AWS_STORAGE_ROOT_PATH | default('') }}' # S3 path prefix for Storage bucket
