@@ -3,9 +3,12 @@
 # To disable warning libdc1394 error: Failed to initialize libdc1394
 ln -s /dev/null /dev/raw1394
 
-envtpl /app/thumbor.conf.tpl  --allow-missing --keep-template
 envtpl /etc/circus.ini.tpl  --allow-missing --keep-template
 envtpl /etc/circus.d/thumbor-circus.ini.tpl  --allow-missing --keep-template
+
+if [ ! -f /app/thumbor.conf ]; then
+  envtpl /app/thumbor.conf.tpl  --allow-missing --keep-template
+fi
 
 # If log level is defined we configure it, else use default log_level = info
 if [ -n "$LOG_LEVEL" ]; then
