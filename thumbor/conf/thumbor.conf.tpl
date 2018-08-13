@@ -677,3 +677,10 @@ TC_AWS_ALLOWED_BUCKETS = {{ TC_AWS_ALLOWED_BUCKETS | default(False) }} # List of
 TC_AWS_STORE_METADATA = {{ TC_AWS_STORE_METADATA | default(False) }} # Store result with metadata (for instance content-type)
 ################################################################################
 
+########################## Google Cloud Storage ################################
+CLOUD_STORAGE_BUCKET_ID = '{{ CLOUD_STORAGE_BUCKET_ID | default('') }}'
+CLOUD_STORAGE_PROJECT_ID = '{{ CLOUD_STORAGE_PROJECT_ID | default('') }}'
+
+RESULT_STORAGE_CLOUD_STORAGE_PROJECT_ID = '{{ RESULT_STORAGE_CLOUD_STORAGE_PROJECT_ID | default('') }}'
+RESULT_STORAGE_CLOUD_STORAGE_BUCKET_ID = '{{ RESULT_STORAGE_CLOUD_STORAGE_BUCKET_ID | default('') }}'
+################################################################################
