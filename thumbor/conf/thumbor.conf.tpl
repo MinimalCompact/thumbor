@@ -525,6 +525,8 @@ OPTIMIZERS = {{ OPTIMIZERS | default([]) }}
 ## Path for the jpegtran binary
 ## Defaults to: /usr/bin/jpegtran
 JPEGTRAN_PATH = '{{ JPEGTRAN_PATH | default('/usr/bin/jpegtran') }}'
+# Path for the progressive scans file to use with jpegtran optimizer. Implies progressive jpeg output
+JPEGTRAN_SCANS_FILE = '{{ JPEGTRAN_SCANS_FILE | default('') }}'
 PROGRESSIVE_JPEG = {{ PROGRESSIVE_JPEG | default(True) }}
 FFMPEG_PATH = '{{ FFMPEG_PATH  | default('/usr/bin/ffmpeg') }}' # Default path for the docker installation in debian
 
@@ -632,6 +634,11 @@ SENTRY_DSN_URL = '{{ SENTRY_DSN_URL | default('') }}'
 ################################################################################
 
 ################################### General ####################################
+
+# The amount of time to wait before shutting down the server, i.e. stop accepting requests.
+MAX_WAIT_SECONDS_BEFORE_SERVER_SHUTDOWN = {{ MAX_WAIT_SECONDS_BEFORE_SERVER_SHUTDOWN | default(0) }}
+# The amount of time to waut before shutting down all io, after the server has been stopped
+MAX_WAIT_SECONDS_BEFORE_IO_SHUTDOWN = {{ MAX_WAIT_SECONDS_BEFORE_IO_SHUTDOWN | default(0) }}
 
 ## Custom app class to override ThumborServiceApp. This config value is
 ## overridden by the -a command-line parameter.

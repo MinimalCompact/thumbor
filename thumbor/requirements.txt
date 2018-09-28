@@ -7,7 +7,7 @@ dateutils==0.6.6
 numpy==1.14.3
 remotecv==2.2.2
 opencv-engine==1.0.1
-thumbor==6.5.1
+thumbor==6.5.2
 tornado-botocore==1.3.2
 tc-aws==6.2.10
 tc-core==0.4.0

@@ -50,7 +50,7 @@ RUN \
 ARG SIMD_LEVEL
 # pinning to 5.1.1 see https://github.com/uploadcare/pillow-simd/issues/17
 RUN if [ -n "$SIMD_LEVEL" ]; then apt-get install -y -q libjpeg-dev zlib1g-dev; fi
-RUN if [ -n "$SIMD_LEVEL" ]; then pip uninstall -y pillow; CC="cc -m$SIMD_LEVEL" LDFLAGS=-L/usr/lib/x86_64-linux-gnu/ pip install --no-cache-dir -U --force-reinstall Pillow-SIMD==5.1.1.post0; fi
+RUN if [ -n "$SIMD_LEVEL" ]; then pip uninstall -y pillow; CC="cc -m$SIMD_LEVEL" LDFLAGS=-L/usr/lib/x86_64-linux-gnu/ pip install --no-cache-dir -U --force-reinstall Pillow-SIMD==5.2.0.post0; fi
 
 COPY docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
