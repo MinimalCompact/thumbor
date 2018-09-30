@@ -236,8 +236,6 @@ MAX_ID_LENGTH = {{ MAX_ID_LENGTH | default(32) }}
 ## Defaults to: None
 {% if STATSD_HOST is defined %}
 STATSD_HOST = '{{ STATSD_HOST }}'
-{% else %}
-STATSD_HOST = None
 {% endif %}
 
 ## Port to send statsd instrumentation to
@@ -248,8 +246,6 @@ STATSD_PORT = {{ STATSD_PORT | default(8125) }}
 ## Defaults to: None
 {% if STATSD_PREFIX is defined %}
 STATSD_PREFIX = '{{ STATSD_PREFIX }}'
-{% else %}
-STATSD_PREFIX = None
 {% endif %}
 
 ################################################################################
@@ -661,8 +657,6 @@ TC_AWS_REGION = '{{ TC_AWS_REGION | default('eu-west-1') }}' # AWS Region
 # Custom S3 endpoint URL (for GCP, Minio, etc.)
 {% if TC_AWS_ENDPOINT is defined %}
 TC_AWS_ENDPOINT = '{{ TC_AWS_ENDPOINT }}'
-{% else %}
-TC_AWS_ENDPOINT = None
 {% endif %}
 
 TC_AWS_STORAGE_BUCKET = '{{ TC_AWS_STORAGE_BUCKET | default('') }}' # S3 bucket for Storage
