@@ -19,3 +19,4 @@ tc-redis==1.0.1
 thumbor-cloud-storage==3.0.0
 pgmagick==0.7.4
 graphicsmagick-engine==0.1.1
+cairosvg==1.0.22
