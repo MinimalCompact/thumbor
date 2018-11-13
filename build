@@ -1,0 +1,40 @@
+#!/bin/bash
+
+echo "--> BUILDING minimalcompact/thumbor"
+docker build --pull -f thumbor/Dockerfile -t minimalcompact/thumbor thumbor/
+# introspecting version by running the built image
+THUMBOR_VERSION=`docker run --rm minimalcompact/thumbor bash -c "pip freeze |grep ^thumbor== | cut -d= -f 3"`
+echo "THUMBOR VERSION: $THUMBOR_VERSION"
+
+echo "--> TAGGING minimalcompact/thumbor:$THUMBOR_VERSION"
+docker tag minimalcompact/thumbor minimalcompact/thumbor:$THUMBOR_VERSION
+echo "--> TAGGING minimalcompact/thumbor:latest"
+docker tag minimalcompact/thumbor minimalcompact/thumbor:latest
+
+echo "--> BUILDING minimalcompact/thumbor:simd-sse4"
+docker build --build-arg SIMD_LEVEL=sse4 -f thumbor/Dockerfile -t minimalcompact/thumbor-simd-sse4 thumbor/
+echo "--> TAGGING minimalcompact/thumbor:$THUMBOR_VERSION-simd-sse4"
+docker tag minimalcompact/thumbor-simd-sse4 minimalcompact/thumbor:$THUMBOR_VERSION-simd-sse4
+echo "--> TAGGING minimalcompact/thumbor:latest-simd-sse4"
+docker tag minimalcompact/thumbor-simd-sse4 minimalcompact/thumbor:latest-simd-sse4
+
+echo "--> BUILDING minimalcompact/thumbor:simd-avx2"
+docker build --build-arg SIMD_LEVEL=avx2  -f thumbor/Dockerfile -t minimalcompact/thumbor-simd-avx2 thumbor/
+echo "--> TAGGING minimalcompact/thumbor:$THUMBOR_VERSION-simd-avx2"
+docker tag minimalcompact/thumbor-simd-avx2 minimalcompact/thumbor:$THUMBOR_VERSION-simd-avx2
+echo "--> TAGGING minimalcompact/thumbor:latest-simd-avx2"
+docker tag minimalcompact/thumbor-simd-avx2 minimalcompact/thumbor:latest-simd-avx2
+
+echo "--> BUILDING minimalcompact/thumbor-nginx-proxy"
+docker build --pull -f nginx-proxy/Dockerfile -t minimalcompact/thumbor-nginx-proxy nginx-proxy/
+echo "--> TAGGING minimalcompact/thumbor-nginx-proxy:$THUMBOR_VERSION"
+docker tag minimalcompact/thumbor-nginx-proxy minimalcompact/thumbor-nginx-proxy:$THUMBOR_VERSION
+echo "--> TAGGING minimalcompact/thumbor-nginx-proxy:latest"
+docker tag minimalcompact/thumbor-nginx-proxy minimalcompact/thumbor-nginx-proxy:latest
+
+echo "--> BUILDING minimalcompact/remotecv"
+docker build --build-arg THUMBOR_TAG=latest -f remotecv/Dockerfile -t minimalcompact/remotecv remotecv/
+echo "--> TAGGING minimalcompact/remotecv:$THUMBOR_VERSION"
+docker tag minimalcompact/remotecv minimalcompact/remotecv:$THUMBOR_VERSION
+echo "--> TAGGING minimalcompact/remotecv:latest"
+docker tag minimalcompact/remotecv minimalcompact/remotecv:latest
