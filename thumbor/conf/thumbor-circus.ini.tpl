@@ -1,6 +1,6 @@
 [watcher:thumbor]
 cmd = python
-args = -m thumbor/server --conf=/app/thumbor.conf --fd $(circus.sockets.thumbor)
+args = -m thumbor/server --conf=/app/thumbor.conf --fd $(circus.sockets.thumbor) -l {{ LOG_LEVEL | default("info") }}
 numprocesses = {{ THUMBOR_NUM_PROCESSES | default(8) }}
 use_sockets = True
 working_dir = /app
