@@ -1,0 +1,97 @@
+###############################
+# THUMBOR                     #
+###############################
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: thumbor
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        service: thumbor
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: cloud.google.com/gke-nodepool
+                operator: In
+                values:
+                - preemptible-pool
+      terminationGracePeriodSeconds: 1
+      containers:
+      - name: thumbor
+        image: ryantxu/thumbor:6.6.1 # TODO, change to minimalcompact/thumbor
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 0.2
+            memory: "100M"
+          limits:
+            cpu: 1.0
+            memory: "500M"
+        env:
+        - name: HEALTHCHECK_ROUTE # See: https://github.com/thumbor/thumbor/pull/1154
+          value: "/"
+        - name: THUMBOR_PORT
+          value: "80"
+        - name: THUMBOR_NUM_PROCESSES
+          value: "1"
+        - name: MAX_AGE
+          value: "3600"
+        - name: MAX_AGE_TEMP_IMAGE
+          value: "300"
+        - name: RESULT_STORAGE_EXPIRATION_SECONDS
+          value: "31536000"
+        - name: ALLOW_UNSAFE_URL
+          value: "True"
+        - name: AUTO_WEBP
+          value: "True"
+        - name: LOADER
+          value: "thumbor_cloud_storage.loaders.cloud_storage_loader"
+        - name: CLOUD_STORAGE_PROJECT_ID
+          value: "your-project-id"
+        - name: CLOUD_STORAGE_BUCKET_ID
+          value: "your.bucket.id"
+        resources: {}
+      restartPolicy: Always
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: thumbor-service
+  labels:
+    service: thumbor
+spec:
+  type: NodePort
+  selector:
+    service: thumbor
+  ports:
+  - port: 80
+    nodePort: 32000
+    name: thumbor-http-80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: thumbor-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: thumbor-ip
+    kubernetes.io/ingress.class: "gce"
+    kubernetes.io/ingress.allow-http: "true"
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+#  tls:
+#  - secretName: wildcard-ssl-secret
+  backend:
+    serviceName: thumbor-service
+    servicePort: 80
+
