@@ -26,7 +26,7 @@ spec:
       terminationGracePeriodSeconds: 1
       containers:
       - name: thumbor
-        image: ryantxu/thumbor:6.6.1 # TODO, change to minimalcompact/thumbor
+        image: minimalcompact/thumbor:latest
         ports:
         - containerPort: 80
           name: http
