@@ -230,6 +230,10 @@ MAX_ID_LENGTH = {{ MAX_ID_LENGTH | default(32) }}
 ################################################################################
 
 
+{% if HEALTHCHECK_ROUTE is defined %}
+HEALTHCHECK_ROUTE = '{{ HEALTHCHECK_ROUTE }}'
+{% endif %}
+
 ################################### Metrics ####################################
 
 ## Host to send statsd instrumentation to
