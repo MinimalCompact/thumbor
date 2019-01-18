@@ -14,6 +14,7 @@ spec:
       labels:
         service: thumbor
     spec:
+      # This is used to put all instances on the `preemptible-pool`
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -39,7 +40,7 @@ spec:
             cpu: 1.0
             memory: "500M"
         env:
-        - name: HEALTHCHECK_ROUTE # See: https://github.com/thumbor/thumbor/pull/1154
+        - name: HEALTHCHECK_ROUTE
           value: "/"
         - name: THUMBOR_PORT
           value: "80"
