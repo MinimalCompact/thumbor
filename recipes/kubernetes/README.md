@@ -10,7 +10,7 @@ Make sure your environment is setup by running:
 ```
 gcloud auth login
 gcloud auth configure-docker
-gcloud components install kubectl;
+gcloud components install kubectl
 ```
 
 
@@ -20,7 +20,8 @@ kubectl apply -f gce-simple-ingress.yaml
 ```
 
 
-This example uses [thumbor-cloud-storage](https://github.com/Superbalist/thumbor-cloud-storage) loader to read images.  Either change it, or make usre your project and buket are configured.
+This example uses [thumbor-cloud-storage](https://github.com/Superbalist/thumbor-cloud-storage) loader to read images. Either change it, or make sure your project and bucket are configured.
+
 ```
 - name: LOADER
   value: "thumbor_cloud_storage.loaders.cloud_storage_loader"
@@ -30,15 +31,11 @@ This example uses [thumbor-cloud-storage](https://github.com/Superbalist/thumbor
   value: "your.bucket.id"
 ```
 
-
-
 ### Wishlist
 
 This example is really the most basic hello world.  It would be great to post
 more example configuraitons showing more robust solutions.  In particular
 
-* Running with nginx for local cache
+* Running with nginx-proxy for local cache (see docker-compose recipes)
 * Running on other k8s engines (digitalocean, aws, etc)
-
-
-
+* Scaling strategies
