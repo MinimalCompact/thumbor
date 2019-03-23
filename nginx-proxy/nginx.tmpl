@@ -40,7 +40,7 @@
             try_files $webp_prefix/$file_path =404;
             add_header Vary Accept;
         {{ else }}
-            try_files /defaul/$file_path =404;
+            try_files /default/$file_path =404;
         {{ end }}
         error_page  404 = @fetch;
 
