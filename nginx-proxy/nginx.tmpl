@@ -30,17 +30,17 @@
     {{ $corsOrigin := (first (groupByKeys .Containers "Env.CORS_ALLOW_ORIGIN")) }}
 
     location ~* "^/(?<path>..)(?<path2>..)(.+)?$" {
-        root        /data/result_storage/v2;
+        root        /data/result_storage;
         expires     1M;
 
         {{ if or $allowCors $corsOrigin }}
             {{ template "cors" (dict "CorsOrigin" $corsOrigin) }}
         {{ end }}
         {{ if $autoWebp }}
-            try_files $webp_prefix/$path/$path2$uri =404;
+            try_files $webp_prefix/$file_path =404;
             add_header Vary Accept;
         {{ else }}
-            try_files /$path/$path2$uri =404;
+            try_files /defaul/$file_path =404;
         {{ end }}
         error_page  404 = @fetch;
 
@@ -83,6 +83,9 @@
 	{{ end }}
 	
 {{ end }}
+
+js_include imgpath.js;
+js_set $file_path file_path;
 
 # If we receive X-Forwarded-Proto, pass it through; otherwise, pass along the
 # scheme used to connect to this server
