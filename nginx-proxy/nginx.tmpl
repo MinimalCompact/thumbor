@@ -1,8 +1,13 @@
 {{ $CurrentContainer := where $ "ID" .Docker.CurrentContainerID | first }}
 
+{{ define "thumbor-include" }}
+    js_include imgpath.js;
+    js_set $file_path file_path;
+{{ end }}
+
 {{ define "thumbor-map" }}
     map $http_accept $webp_prefix {
-        default   "";
+        default   "/default";
         "~*webp*"  "/webp";
     }
     map $request_uri $format {
@@ -30,17 +35,17 @@
     {{ $corsOrigin := (first (groupByKeys .Containers "Env.CORS_ALLOW_ORIGIN")) }}
 
     location ~* "^/(?<path>..)(?<path2>..)(.+)?$" {
-        root        /data/result_storage/v2;
+        root        /data/result_storage;
         expires     1M;
 
         {{ if or $allowCors $corsOrigin }}
             {{ template "cors" (dict "CorsOrigin" $corsOrigin) }}
         {{ end }}
         {{ if $autoWebp }}
-            try_files $webp_prefix/$path/$path2$uri =404;
+            try_files $webp_prefix/$file_path =404;
             add_header Vary Accept;
         {{ else }}
-            try_files /$path/$path2$uri =404;
+            try_files /default/$file_path =404;
         {{ end }}
         error_page  404 = @fetch;
 
@@ -131,6 +136,7 @@ access_log off;
 resolver {{ $.Env.RESOLVERS }};
 {{ end }}
 
+{{ template "thumbor-include" }}
 {{ template "thumbor-map" }}
 
 {{ if (exists "/etc/nginx/proxy.conf") }}
