@@ -19,7 +19,7 @@ blocks:
           - checkout
           - ls -1          
           - echo "Docker build..."
-          - ./build
+          - [ "$SEMAPHORE_GIT_BRANCH" == "master" ] && ./build
           - echo "Build done"          
           #- ./push
           - echo "Push done"
