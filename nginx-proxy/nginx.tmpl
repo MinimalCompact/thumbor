@@ -1,6 +1,7 @@
 {{ $CurrentContainer := where $ "ID" .Docker.CurrentContainerID | first }}
 
 {{ define "thumbor-include" }}
+    merge_slashes off;
     js_include imgpath.js;
     js_set $file_path file_path;
 {{ end }}
