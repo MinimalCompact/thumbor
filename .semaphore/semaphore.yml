@@ -5,24 +5,21 @@ agent:
     type: e1-standard-2
     os_image: ubuntu1804
 blocks:
-  - name: "Build"
+  - name: Build and Push
     task:
-      env_vars:
-        - name: APP_ENV
-          value: prod
+      secrets:
+        - name: docker hub
+      prologue:
+        commands:
+          # Authenticate to the registry for all jobs in the block
+          - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
       jobs:
       - name: Docker build
         commands:
           - checkout
-          - ls -1
-          - echo $APP_ENV
+          - ls -1          
           - echo "Docker build..."
           - ./build
-          - echo "done"
-  - name: "Push Images"
-    task:
-      jobs:
-      - name: Push
-        commands:
-          - checkout
-          - echo "... coming soon"
+          - echo "Build done"          
+          #- ./push
+          - echo "Push done"
