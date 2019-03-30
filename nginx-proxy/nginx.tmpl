@@ -1,5 +1,10 @@
 {{ $CurrentContainer := where $ "ID" .Docker.CurrentContainerID | first }}
 
+{{ define "thumbor-include" }}
+    js_include imgpath.js;
+    js_set $file_path file_path;
+{{ end }}
+
 {{ define "thumbor-map" }}
     map $http_accept $webp_prefix {
         default   "/default";
@@ -84,9 +89,6 @@
 	
 {{ end }}
 
-js_include imgpath.js;
-js_set $file_path file_path;
-
 # If we receive X-Forwarded-Proto, pass it through; otherwise, pass along the
 # scheme used to connect to this server
 map $http_x_forwarded_proto $proxy_x_forwarded_proto {
@@ -134,6 +136,7 @@ access_log off;
 resolver {{ $.Env.RESOLVERS }};
 {{ end }}
 
+{{ template "thumbor-include" }}
 {{ template "thumbor-map" }}
 
 {{ if (exists "/etc/nginx/proxy.conf") }}
