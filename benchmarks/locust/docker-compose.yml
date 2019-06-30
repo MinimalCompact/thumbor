@@ -1,0 +1,58 @@
+version: "3"
+services:
+  thumbor:
+    image: minimalcompact/thumbor
+    environment:
+      # we can control the number of processes and threads via ENV
+      - THUMBOR_NUM_PROCESSES=${THUMBOR_NUM_PROCESSES:-1}
+      - ENGINE_THREADPOOL_SIZE=${ENGINE_THREADPOOL_SIZE:-0}
+      # this would allow CORS from any origin (you can restrict to specific origins if you want)
+      - CORS_ALLOW_ORIGIN=*
+      # returns a webp image if browser Accept headers match
+      - AUTO_WEBP=True
+      # no result storage / caching, so we measure thumbor's processing
+      - RESULT_STORAGE=thumbor.result_storages.no_storage
+      - RESULT_STORAGE_STORES_UNSAFE=True
+      # keeping loader storage, to make tests more consistent
+      # (eliminate time to fetch external images)
+      - STORAGE=thumbor.storages.file_storage
+    volumes:
+      # mounting a /data folder to store cached images
+      - ./data:/data
+  # This is the master locust engine
+  locust:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - THUMBOR_DOCKER_PROCS=${THUMBOR_DOCKER_PROCS:-1}
+      - THUMBOR_NUM_PROCESSES=${THUMBOR_NUM_PROCESSES:-1}
+      - ENGINE_THREADPOOL_SIZE=${ENGINE_THREADPOOL_SIZE:-0}
+    volumes:
+      - ./scripts:/opt/scripts
+      - ./reports:/opt/reports
+    command: "locust
+              --host=http://thumbor
+              -f /opt/scripts/benchmark.py
+              --no-web
+              -c 200
+              -r 4
+              --run-time 2m
+              --master
+              --expect-slaves 3
+              --only-summary
+              --csv=/opt/reports/${THUMBOR_DOCKER_PROCS}-${THUMBOR_NUM_PROCESSES}-${ENGINE_THREADPOOL_SIZE}"
+  # this is the locust slave. We can control the number of slaves using docker-compose scale
+  locust-slave:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./scripts:/opt/scripts
+      - ./reports:/opt/reports
+    command: "locust
+              --host=http://thumbor
+              -f /opt/scripts/benchmark.py
+              --no-web
+              --slave
+              --master-host=locust"
