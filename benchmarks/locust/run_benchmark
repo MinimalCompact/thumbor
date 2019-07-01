@@ -38,3 +38,12 @@ for procs in 3 6 9; do
     echo
   done
 done
+
+# combine CSV files into one consolidated file for requests and distribution
+# (it's not super-elegant, but seems to work...)
+cd reports
+cat *_requests.csv |head -1 | sed 's/$/,"Run Configuration"/' >requests.csv
+for i in *_requests.csv; do awk '{print $0 ",\"[" FILENAME "]\"" }' $i | tail -n +2 | sed 's/_requests\.csv//' >> requests.csv; done
+cat *_distribution.csv |head -1 | sed 's/$/,"Run Configuration"/' >distribution.csv
+for i in *_distribution.csv; do awk '{print $0 ",\"[" FILENAME "]\"" }' $i | tail -n +2 | sed 's/_distribution\.csv//' >> distribution.csv; done
+cd ..
