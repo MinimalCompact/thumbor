@@ -66,6 +66,7 @@ services:
       - REMOTECV_REDIS_HOST=redis
       - REMOTECV_REDIS_PORT=6379
       - REMOTECV_REDIS_DATABASE=0
+      - REMOTECV_LOADER=remotecv_aws.loader
     deploy:
       replicas: 1
     links:
