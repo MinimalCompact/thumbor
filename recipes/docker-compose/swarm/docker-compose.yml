@@ -79,7 +79,7 @@ services:
       - REMOTECV_REDIS_HOST=redis
       - REMOTECV_REDIS_PORT=6379
       - REMOTECV_REDIS_DATABASE=0
-      - LOADER=remotecv_aws.loader
+      - REMOTECV_LOADER=remotecv_aws.loader 
       - AWS_ACCESS_KEY_ID= # your AWS_ACCESS_KEY here
       - AWS_SECRET_ACCESS_KEY= # your AWS_SECRET_ACCESS_KEY here
       - AWS_LOADER_BUCKET= # your S3 bucket
