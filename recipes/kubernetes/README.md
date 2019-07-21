@@ -31,11 +31,28 @@ This example uses [thumbor-cloud-storage](https://github.com/Superbalist/thumbor
   value: "your.bucket.id"
 ```
 
+## Running on Digital Ocean
+
+The `do-*.yaml` examples have been tested running `1.15.1`
+
+
+Make sure your environment is set up by installing `doctl` and `kubectl`, and then running:
+```
+doctl auth init
+doctl kubernetes cluster kubeconfig save <cluster name>
+```
+
+
+Then to apply each confguration to your cluster:
+```
+kubectl apply -f do-simple-ingress.yaml
+```
+
 ### Wishlist
 
 This example is really the most basic hello world.  It would be great to post
 more example configuraitons showing more robust solutions.  In particular
 
 * Running with nginx-proxy for local cache (see docker-compose recipes)
-* Running on other k8s engines (digitalocean, aws, etc)
+* Running on other k8s engines (aws, etc)
 * Scaling strategies

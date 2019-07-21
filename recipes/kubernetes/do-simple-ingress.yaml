@@ -1,0 +1,61 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: thumbor-deployment
+spec:
+  # configure the desired number of replicas based on your requirements
+  replicas: 2
+  selector:
+    matchLabels:
+      app: thumbor
+  template:
+    metadata:
+      labels:
+        app: thumbor
+    spec:
+      containers:
+      - name: thumbor
+        image: minimalcompact/thumbor:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: HEALTHCHECK_ROUTE
+          value: "/"
+        - name: THUMBOR_PORT
+          value: "80"
+        # set the number of processes to 1-2x of CPU cores for each Node
+        - name: THUMBOR_NUM_PROCESSES
+          value: "2"
+        # MAX_AGE sets the HTTP caching headers
+        # depending on your setup, you might want to increase it
+        - name: MAX_AGE
+          value: "3600"
+        - name: MAX_AGE_TEMP_IMAGE
+          value: "300"
+        - name: RESULT_STORAGE_EXPIRATION_SECONDS
+          value: "31536000"
+        - name: ALLOW_UNSAFE_URL
+          value: "True"
+        - name: AUTO_WEBP
+          value: "True"
+        resources: {}
+      restartPolicy: Always
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: thumbor-loadbalancer
+spec:
+  # This would create a DigitalOcean Load Balancer
+  # you can get its IP once it's up using:
+  # `kubectl describe service thumbor-loadbalancer`
+  # (look for LoadBalancer Ingress)
+  type: LoadBalancer
+  selector:
+    app: thumbor
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      name: http
