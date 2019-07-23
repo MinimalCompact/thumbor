@@ -24,7 +24,7 @@ RUN  \
         zlib1g-dev \
         libboost-python-dev \
         libmemcached-dev \
-        gifsicle=1.88* \
+        gifsicle \
         ffmpeg && \
     apt-get clean
 
