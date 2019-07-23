@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 echo "--> BUILDING minimalcompact/thumbor"
 docker build --pull -f thumbor/Dockerfile -t minimalcompact/thumbor thumbor/
