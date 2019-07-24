@@ -702,3 +702,6 @@ CLOUD_STORAGE_PROJECT_ID = '{{ CLOUD_STORAGE_PROJECT_ID | default('') }}'
 RESULT_STORAGE_CLOUD_STORAGE_PROJECT_ID = '{{ RESULT_STORAGE_CLOUD_STORAGE_PROJECT_ID | default('') }}'
 RESULT_STORAGE_CLOUD_STORAGE_BUCKET_ID = '{{ RESULT_STORAGE_CLOUD_STORAGE_BUCKET_ID | default('') }}'
 ################################################################################
+
+######################### tc_prometheus ########################################
+PROMETHEUS_SCRAPE_PORT = {{ PROMETHEUS_SCRAPE_PORT | default(8000) }} # Port the prometheus client should listen on
