@@ -18,7 +18,7 @@ blocks:
         commands:
           - checkout
           - ls -1
-          - echo "Docker build (only master)..."
-          - "[ \"$SEMAPHORE_GIT_BRANCH\" != \"master\" ] || ./build && echo Build done"
+          - echo "Docker build ..."
+          - ./build && echo Build done"
           - echo "Docker push (only master)..."
           - "[ \"$SEMAPHORE_GIT_BRANCH\" != \"master\" ] || ./push && echo Push done"
