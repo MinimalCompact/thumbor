@@ -51,3 +51,18 @@ setup () {
     echo 1234 > $BASE/data/result_storage/default/77/1f/8c8786e4ad7ed364b2ea722fbe8f3ec043b6
     curl -sSL -D - 'http://localhost/unsafe/500x150/filters:format(jpeg)/i.imgur.com/Nfn80ck.png' |tail -1 |grep 1234
 }
+
+@test "filters:format(webp) returns an image/webp content-type" {
+    rm -f $BASE/data/result_storage/default/a4/5a/9b7ed7290937d3c996c178141ae5517f8567
+    curl -sSL -D - 'http://localhost/unsafe/500x150/filters:format(webp)/i.imgur.com/Nfn80ck.png' -o /dev/null |grep 'Content-Type: image/webp'
+}
+
+@test "filters:format(webp) result is cached" {
+    ls $BASE/data/result_storage/default/a4/5a/9b7ed7290937d3c996c178141ae5517f8567
+    curl -sSL -D - 'http://localhost/unsafe/500x150/filters:format(webp)/i.imgur.com/Nfn80ck.png' -o /dev/null |grep 'Content-Type: image/webp'
+}
+
+@test "next filters:format(webp) request is fetched from cache" {
+    echo 1234 > $BASE/data/result_storage/default/a4/5a/9b7ed7290937d3c996c178141ae5517f8567
+    curl -sSL -D - 'http://localhost/unsafe/500x150/filters:format(webp)/i.imgur.com/Nfn80ck.png' |tail -1 |grep 1234
+}
