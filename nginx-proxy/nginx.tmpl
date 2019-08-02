@@ -18,7 +18,16 @@
         "~*format\(png\)" "image/png";
         "~*format\(gif\)" "image/gif";
         "~*format\(webp\)" "image/webp";
+        "~*\.jpeg" "image/jpeg";
+        "~*\.jpg" "image/jpeg";
+        "~*\.png" "image/png";
+        "~*\.gif" "image/gif";
+        "~*\.webp" "image/webp";
     }
+	map $http_accept $auto_webp_content_type {
+		default   $format;
+		"~*webp*"  "image/webp";
+	}
 {{ end }}
 
 {{ define "cors" }}
@@ -45,13 +54,13 @@
         {{ if $autoWebp }}
             try_files $webp_prefix/$file_path =404;
             add_header Vary Accept;
+			#if auto webp is on then content-type is based on accept header
+			add_header Content-Type $auto_webp_content_type;
         {{ else }}
             try_files /default/$file_path =404;
+			add_header Content-Type $format;
         {{ end }}
         error_page  404 = @fetch;
-
-        # if $format is empty (default) then this is ignored
-        add_header Content-Type $format;
     }
 
     location = /healthcheck {
