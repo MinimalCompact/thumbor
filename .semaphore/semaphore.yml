@@ -13,7 +13,14 @@ blocks:
         commands:
           # Authenticate to the registry for all jobs in the block
           - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+          - git clone https://github.com/bats-core/bats-core.git
+          - cd bats-core
+          - sudo ./install.sh /usr/local
       jobs:
+      - name: Tests
+        commands:
+          - checkout
+          - sudo bats tests
       - name: Docker build
         commands:
           - checkout
