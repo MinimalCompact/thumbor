@@ -9,7 +9,7 @@
 {{ define "thumbor-map" }}
     map $http_accept $webp_prefix {
         default   "/default";
-        "~*webp*"  "/webp";
+        "~*webp*"  "/auto_webp";
     }
     map $request_uri $format {
         default "";
