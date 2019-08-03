@@ -9,6 +9,12 @@ setup () {
     fi
 }
 
+teardown () {
+    if [[ "${#BATS_TEST_NAMES[@]}" -eq "$BATS_TEST_NUMBER" ]]; then
+        docker-compose -f $BASE/docker-compose.yml down
+    fi
+}
+
 @test "PNG returns an image/png content-type" {
     curl -sSL -D - http://localhost/unsafe/500x150/i.imgur.com/Nfn80ck.png -o /dev/null |grep 'Content-Type: image/png'
 }
