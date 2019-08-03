@@ -21,9 +21,9 @@ blocks:
         commands:
           - checkout
           - ls -1
-          - sudo bats tests
+          - sudo bats --tap tests
           - echo "Docker build ..."
           - "./build && echo Build done"
-          - sudo bats tests
+          - sudo bats --tap tests
           - echo "Docker push (only master)..."
           - "[ \"$SEMAPHORE_GIT_BRANCH\" != \"master\" ] || ./push && echo Push done"
