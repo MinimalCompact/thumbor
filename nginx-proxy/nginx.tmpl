@@ -54,12 +54,13 @@
         {{ if $autoWebp }}
             try_files $webp_prefix/$file_path =404;
             add_header Vary Accept;
-			#if auto webp is on then content-type is based on accept header
-			add_header Content-Type $auto_webp_content_type;
+            #if auto webp is on then content-type is based on accept header
+            set $format $auto_webp_content_type;
         {{ else }}
             try_files /default/$file_path =404;
-			add_header Content-Type $format;
         {{ end }}
+        # if $format is empty (default) then this is ignored
+        add_header Content-Type $format;
         error_page  404 = @fetch;
     }
 
