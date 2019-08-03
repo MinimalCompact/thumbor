@@ -21,6 +21,7 @@ blocks:
         commands:
           - checkout
           - ls -1
+          - sudo bats tests
           - echo "Docker build ..."
           - "./build && echo Build done"
           - sudo bats tests
