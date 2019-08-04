@@ -5,7 +5,7 @@ agent:
     type: e1-standard-2
     os_image: ubuntu1804
 blocks:
-  - name: Build and Push
+  - name: Build, Test and Push
     task:
       secrets:
         - name: docker hub
@@ -21,8 +21,9 @@ blocks:
         commands:
           - checkout
           - ls -1
+          - bash -c "for filename in tests/*.bats; do sudo bats --tap \$filename || exit 1; done"
           - echo "Docker build ..."
           - "./build && echo Build done"
-          - sudo bats tests
+          - bash -c "for filename in tests/*.bats; do sudo bats --tap \$filename || exit 1; done"
           - echo "Docker push (only master)..."
           - "[ \"$SEMAPHORE_GIT_BRANCH\" != \"master\" ] || ./push && echo Push done"
