@@ -72,3 +72,8 @@ teardown () {
     echo 1234 > $BASE/data/result_storage/default/a4/5a/9b7ed7290937d3c996c178141ae5517f8567
     curl -sSL -D - 'http://localhost/unsafe/500x150/filters:format(webp)/i.imgur.com/Nfn80ck.png' |tail -1 |grep 1234
 }
+
+@test "only one content-type header is present" {
+    count=`curl -H 'Accept: image/webp' -sSL -D - http://localhost/unsafe/500x150/i.imgur.com/Nfn80ck.png -o /dev/null |grep 'Content-Type:'|wc -l`
+    [ $count -eq 1 ]
+}
