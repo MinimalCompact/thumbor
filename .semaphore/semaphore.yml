@@ -22,7 +22,6 @@ blocks:
         commands:
           - checkout
           - ls -1
-          - bash -c "for filename in tests/*.bats; do sudo bats --tap \$filename || exit 1; done"
           - echo "Docker build ..."
           - "./build && echo Build done"
           - bash -c "for filename in tests/*.bats; do sudo bats --tap \$filename || exit 1; done"
