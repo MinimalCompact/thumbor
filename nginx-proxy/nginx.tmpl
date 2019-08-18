@@ -1,35 +1,5 @@
 {{ $CurrentContainer := where $ "ID" .Docker.CurrentContainerID | first }}
 
-{{ define "thumbor-include" }}
-    merge_slashes off;
-    js_include imgpath.js;
-    js_set $file_path file_path;
-{{ end }}
-
-{{ define "thumbor-map" }}
-    map $http_accept $webp_prefix {
-        default   "/default";
-        "~*webp*"  "/auto_webp";
-    }
-    map $request_uri $format {
-        default "";
-        "~*format\(jpeg\)" "image/jpeg";
-        "~*format\(jpg\)" "image/jpeg";
-        "~*format\(png\)" "image/png";
-        "~*format\(gif\)" "image/gif";
-        "~*format\(webp\)" "image/webp";
-        "~*\.jpeg" "image/jpeg";
-        "~*\.jpg" "image/jpeg";
-        "~*\.png" "image/png";
-        "~*\.gif" "image/gif";
-        "~*\.webp" "image/webp";
-    }
-	map $http_accept $auto_webp_content_type {
-		default   $format;
-		"~*webp*"  "image/webp";
-	}
-{{ end }}
-
 {{ define "cors" }}
     add_header 'Access-Control-Allow-Origin' '{{ or .CorsOrigin "*" }}';
     add_header 'Access-Control-Allow-Credentials' 'true';
@@ -40,41 +10,22 @@
 {{ define "thumbor" }}
     {{ $proto := .Proto }}
     {{ $upstream_name := .UpstreamName }}
-    {{ $autoWebp := (first (groupByKeys .Containers "Env.AUTO_WEBP")) }}
     {{ $allowCors := (first (groupByKeys .Containers "Env.THUMBOR_ALLOW_CORS")) }}
     {{ $corsOrigin := (first (groupByKeys .Containers "Env.CORS_ALLOW_ORIGIN")) }}
 
-    location ~* "^/(?<path>..)(?<path2>..)(.+)?$" {
-        root        /data/result_storage;
-        expires     1M;
-
+    location ~* "^/(.+)?$" {
         {{ if or $allowCors $corsOrigin }}
             {{ template "cors" (dict "CorsOrigin" $corsOrigin) }}
         {{ end }}
-        {{ if $autoWebp }}
-            try_files $webp_prefix/$file_path =404;
-            add_header Vary Accept;
-            #if auto webp is on then content-type is based on accept header
-            set $format $auto_webp_content_type;
-        {{ else }}
-            try_files /default/$file_path =404;
-        {{ end }}
-        # if $format is empty (default) then this is ignored
-        add_header Content-Type $format;
-        error_page  404 = @fetch;
+
+        proxy_cache thumbor;
+        proxy_buffering on;
+        proxy_pass {{ trim $proto }}://{{ trim $upstream_name }};
     }
 
     location = /healthcheck {
         proxy_pass {{ trim .Proto }}://{{ trim $upstream_name }};
         access_log off;
-    }
-
-    location @fetch {
-        internal;
-        {{ if or $allowCors $corsOrigin }}
-            {{ template "cors" (dict "CorsOrigin" $corsOrigin) }}
-        {{ end }}
-        proxy_pass {{ trim $proto }}://{{ trim $upstream_name }};
     }
 {{ end }}
 
@@ -147,9 +98,6 @@ access_log off;
 resolver {{ $.Env.RESOLVERS }};
 {{ end }}
 
-{{ template "thumbor-include" }}
-{{ template "thumbor-map" }}
-
 {{ if (exists "/etc/nginx/proxy.conf") }}
 include /etc/nginx/proxy.conf;
 {{ else }}
@@ -164,7 +112,7 @@ proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
 proxy_set_header X-Forwarded-Ssl $proxy_x_forwarded_ssl;
 proxy_set_header X-Forwarded-Port $proxy_x_forwarded_port;
-
+proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=thumbor:100m inactive=300m use_temp_path=off;
 # Mitigate httpoxy attack (see README for details)
 proxy_set_header Proxy "";
 {{ end }}
