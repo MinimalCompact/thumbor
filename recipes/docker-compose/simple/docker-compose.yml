@@ -15,15 +15,11 @@ services:
       - CORS_ALLOW_ORIGIN=*
       # returns a webp image if browser Accept headers match
       - AUTO_WEBP=True
-      # Basic thumbor setup to cache both original images and results (after manipulation)
-      # nginx-proxy would detect if there's a cached version and serve it for you automatically
+      # nginx-proxy does caching automatically, so no need to store the result storage cache
       # (this greatly speeds up and saves on CPU)
-      - RESULT_STORAGE=thumbor.result_storages.file_storage
+      - RESULT_STORAGE=thumbor.result_storages.no_storage
       - RESULT_STORAGE_STORES_UNSAFE=True
       - STORAGE=thumbor.storages.file_storage
-    volumes:
-      # mounting a /data folder to store cached images
-      - ./data:/data
     restart: always
     networks:
       - app
@@ -38,17 +34,12 @@ services:
       # this is essential for nginx-proxy to detect docker containers, scaling etc
       # see https://github.com/jwilder/nginx-proxy
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      # mapping the same data folder, to allow nginx-proxy to fetch images from cache
-      - ./data:/data
     ports:
       - "80:80"
       - "443:443"
     restart: always
     networks:
       - app
-volumes:
-  data:
-    driver: local
 networks:
   app:
     driver: bridge
