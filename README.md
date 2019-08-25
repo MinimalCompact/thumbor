@@ -34,6 +34,11 @@ Check out the recipes folder for some examples (still work in progress).
 
 The recipes include comments to document how things should be set up and why.
 
+## Changelog / Deprecation
+
+* `minimalcompact/thumbor-nginx-proxy` is deprecated and replaced by `minimalcompact/thumbor-nginx-proxy-cache`
+  see https://github.com/MinimalCompact/thumbor/pull/55
+
 ## History
 
 This project is a loose fork of `APSL/docker-thumbor`. It's not a direct fork, because lots has changed, and it's not
