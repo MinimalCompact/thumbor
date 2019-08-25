@@ -26,12 +26,19 @@ docker tag minimalcompact/thumbor-simd-avx2 minimalcompact/thumbor:$THUMBOR_VERS
 echo "--> TAGGING minimalcompact/thumbor:latest-simd-avx2"
 docker tag minimalcompact/thumbor-simd-avx2 minimalcompact/thumbor:latest-simd-avx2
 
-echo "--> BUILDING minimalcompact/thumbor-nginx-proxy"
+echo "--> BUILDING minimalcompact/thumbor-nginx-proxy (DEPRECATED)"
 docker build --pull -f nginx-proxy/Dockerfile -t minimalcompact/thumbor-nginx-proxy nginx-proxy/
 echo "--> TAGGING minimalcompact/thumbor-nginx-proxy:$THUMBOR_VERSION"
 docker tag minimalcompact/thumbor-nginx-proxy minimalcompact/thumbor-nginx-proxy:$THUMBOR_VERSION
 echo "--> TAGGING minimalcompact/thumbor-nginx-proxy:latest"
 docker tag minimalcompact/thumbor-nginx-proxy minimalcompact/thumbor-nginx-proxy:latest
+
+echo "--> BUILDING minimalcompact/thumbor-nginx-proxy-cache"
+docker build --pull -f nginx-proxy-cache/Dockerfile -t minimalcompact/thumbor-nginx-proxy-cache nginx-proxy-cache/
+echo "--> TAGGING minimalcompact/thumbor-nginx-proxy-cache:$THUMBOR_VERSION"
+docker tag minimalcompact/thumbor-nginx-proxy-cache minimalcompact/thumbor-nginx-proxy-cache:$THUMBOR_VERSION
+echo "--> TAGGING minimalcompact/thumbor-nginx-proxy-cache:latest"
+docker tag minimalcompact/thumbor-nginx-proxy-cache minimalcompact/thumbor-nginx-proxy-cache:latest
 
 echo "--> BUILDING minimalcompact/remotecv"
 docker build --build-arg THUMBOR_TAG=latest -f remotecv/Dockerfile -t minimalcompact/remotecv remotecv/
