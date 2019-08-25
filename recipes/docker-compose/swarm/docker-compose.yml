@@ -28,7 +28,7 @@ services:
       - STORAGE=thumbor.storages.mixed_storage
       - MIXED_STORAGE_FILE_STORAGE=thumbor.storages.file_storage
       - MIXED_STORAGE_DETECTOR_STORAGE=tc_redis.storages.redis_storage
-      - RESULT_STORAGE=thumbor.result_storages.file_storage
+      - RESULT_STORAGE=thumbor.result_storages.no_storage
       # Cache storage settings
       #
       # storage keeps the original image files cached
@@ -43,7 +43,6 @@ services:
       - REDIS_QUEUE_SERVER_DB=0
     volumes:
       - logs:/logs
-      - data:/data
     deploy:
       # Note this would create 3 instances, each with THUMBOR_NUM_PROCESSES
       # (for docker-compose, this is ignored, but can be controlled using
@@ -55,7 +54,7 @@ services:
     networks:
       - frontend
   nginx-proxy:
-    image: minimalcompact/thumbor-nginx-proxy
+    image: minimalcompact/thumbor-nginx-proxy-cache
     environment:
       # setting the DEFAULT_HOST to the same as the VIRTUAL_HOST above.
       # Makes sure it works irrespective of the host name
@@ -65,8 +64,6 @@ services:
       # this is essential for nginx-proxy to detect docker containers, scaling etc
       # see https://github.com/jwilder/nginx-proxy
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      # mapping the same data folder, to allow nginx-proxy to fetch images from cache
-      - ./data:/data
     ports:
       - "80:80"
       - "443:443"
@@ -99,8 +96,6 @@ services:
       - frontend
       - backend
 volumes:
-  data:
-    driver: local
   logs:
     driver: local
 networks:

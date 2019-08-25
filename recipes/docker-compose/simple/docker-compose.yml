@@ -24,12 +24,16 @@ services:
     networks:
       - app
   nginx-proxy:
-    image: minimalcompact/thumbor-nginx-proxy
+    image: minimalcompact/thumbor-nginx-proxy-cache
     environment:
       # setting the DEFAULT_HOST to the same as the VIRTUAL_HOST above.
       # Makes sure it works irrespective of the host name
       # Normally this won't be necessary, but it helps for testing.
       - DEFAULT_HOST=localhost
+      # optional: control cache size (default 100m) and inactive (default 300m)
+      #           see https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_cache_path
+      - PROXY_CACHE_SIZE=100m
+      - PROXY_CACHE_INACTIVE=300m
     volumes:
       # this is essential for nginx-proxy to detect docker containers, scaling etc
       # see https://github.com/jwilder/nginx-proxy
