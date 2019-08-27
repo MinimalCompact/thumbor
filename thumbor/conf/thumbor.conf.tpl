@@ -433,6 +433,10 @@ REDIS_STORAGE_SERVER_DB = {{ REDIS_STORAGE_SERVER_DB | default(0) }}
 ## Defaults to: None
 REDIS_STORAGE_SERVER_PASSWORD = {{ REDIS_STORAGE_SERVER_PASSWORD | default(None) }}
 
+## Ignore Redis storage errors
+## Defaults to: True
+REDIS_STORAGE_IGNORE_ERRORS = {{ REDIS_STORAGE_IGNORE_ERRORS | default(True) }}
+
 ################################################################################
 
 
@@ -452,7 +456,11 @@ REDIS_RESULT_STORAGE_SERVER_DB = {{ REDIS_RESULT_STORAGE_SERVER_DB | default(0) 
 
 ## Redis storage server password
 ## Defaults to: None
-REDIS_RESULT_STORAGE_SERVER_PASSWORD = {{ REDIS_STORAGE_SERVER_PASSWORD | default(None) }}
+REDIS_RESULT_STORAGE_SERVER_PASSWORD = {{ REDIS_RESULT_STORAGE_SERVER_PASSWORD | default(None) }}
+
+## Ignore Redis storage errors
+## Defaults to: True
+REDIS_RESULT_STORAGE_IGNORE_ERRORS = {{ REDIS_RESULT_STORAGE_IGNORE_ERRORS | default(True) }}
 
 ################################################################################
 
