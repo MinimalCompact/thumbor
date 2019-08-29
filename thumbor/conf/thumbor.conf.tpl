@@ -458,7 +458,7 @@ REDIS_RESULT_STORAGE_SERVER_DB = {{ REDIS_RESULT_STORAGE_SERVER_DB | default(0) 
 ## Defaults to: None
 REDIS_RESULT_STORAGE_SERVER_PASSWORD = {{ REDIS_RESULT_STORAGE_SERVER_PASSWORD | default(None) }}
 
-## Ignore Redis storage errors
+## Ignore Redis result storage errors
 ## Defaults to: True
 REDIS_RESULT_STORAGE_IGNORE_ERRORS = {{ REDIS_RESULT_STORAGE_IGNORE_ERRORS | default(True) }}
 
