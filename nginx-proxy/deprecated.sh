@@ -34,7 +34,7 @@ fi
 >&2 echo
 >&2 echo
 >&2 echo
->&2 echo "DEPRECATED. Please switch to thumbor-caching-proxy"
+>&2 echo "DEPRECATED. Please switch to thumbor-nginx-proxy-cache"
 >&2 echo
 >&2 echo
 >&2 echo
