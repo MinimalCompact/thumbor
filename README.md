@@ -8,7 +8,7 @@ Key Features and Goals:
 
 * The latest version of thumbor and dependencies, in a docker image
 * Supports both solo thumbor and multiprocess in one image
-* Nginx frontend docker image with built-in caching, using [nginx-proxy](https://github.com/jwilder/nginx-proxy)
+* [Nginx frontend docker image with built-in caching](nginx-proxy-cache/README.md), using [nginx-proxy](https://github.com/jwilder/nginx-proxy)
 * SIMD support via docker tags
 * remotecv docker image (for async smart cropping and feature detection)
 * Clear version tagging to match Thumbor versions
@@ -33,6 +33,11 @@ $ wget http://localhost/unsafe/500x150/i.imgur.com/Nfn80ck.png
 Check out the recipes folder for some examples (still work in progress).
 
 The recipes include comments to document how things should be set up and why.
+
+## Changelog / Deprecation
+
+* `minimalcompact/thumbor-nginx-proxy` is deprecated and replaced by `minimalcompact/thumbor-nginx-proxy-cache`
+  see https://github.com/MinimalCompact/thumbor/pull/55
 
 ## History
 
