@@ -38,12 +38,17 @@ services:
       # this is essential for nginx-proxy to detect docker containers, scaling etc
       # see https://github.com/jwilder/nginx-proxy
       - /var/run/docker.sock:/tmp/docker.sock:ro
+      # mapping cache folder, to persist it independently of the container
+      - ./cache:/var/cache/nginx
     ports:
       - "80:80"
       - "443:443"
     restart: always
     networks:
       - app
+volumes:
+  cache:
+    driver: local
 networks:
   app:
     driver: bridge

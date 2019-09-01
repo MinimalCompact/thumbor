@@ -8,7 +8,7 @@ Key Features and Goals:
 
 * The latest version of thumbor and dependencies, in a docker image
 * Supports both solo thumbor and multiprocess in one image
-* Nginx frontend docker image with built-in caching, using [nginx-proxy](https://github.com/jwilder/nginx-proxy)
+* [Nginx frontend docker image with built-in caching](nginx-proxy-cache/README.md), using [nginx-proxy](https://github.com/jwilder/nginx-proxy)
 * SIMD support via docker tags
 * remotecv docker image (for async smart cropping and feature detection)
 * Clear version tagging to match Thumbor versions

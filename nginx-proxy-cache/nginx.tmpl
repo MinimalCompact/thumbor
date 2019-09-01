@@ -30,8 +30,8 @@
 {{ end }}
 
 {{ define "thumbor-caching" }}
-    {{ $proxyCacheSize := or .ProxyCacheSize "100m" }}
-    {{ $proxyCacheInactive := or .ProxyCacheInactive "300m" }}
+    {{ $proxyCacheSize := or .ProxyCacheSize "10g" }}
+    {{ $proxyCacheInactive := or .ProxyCacheInactive "48h" }}
     proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=thumbor:{{ $proxyCacheSize }} inactive={{ $proxyCacheInactive }} use_temp_path=off;
 {{ end }}
 

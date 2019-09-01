@@ -37,8 +37,8 @@ services:
       # this is essential for nginx-proxy to detect docker containers, scaling etc
       # see https://github.com/jwilder/nginx-proxy
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      # mapping the same data folder, to allow nginx-proxy to fetch images from cache
-      - ./data:/data
+      # mapping cache folder, to persist it independently of the container
+      - ./cache:/var/cache/nginx
       # mapping for letsencrypt companion (note using the current folder)
       - ./nginx/vhost.d:/etc/nginx/vhost.d:ro
       - ./nginx/html:/usr/share/nginx/html
@@ -60,6 +60,9 @@ services:
       - ./nginx/vhost.d/:/etc/nginx/vhost.d:rw
     depends_on:
       - nginx-proxy
+volumes:
+  cache:
+    driver: local
 networks:
   app:
     driver: bridge
