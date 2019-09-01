@@ -30,9 +30,10 @@
 {{ end }}
 
 {{ define "thumbor-caching" }}
+    {{ $proxyCacheMemorySize := or .ProxyCacheMemorySize "500m" }}
     {{ $proxyCacheSize := or .ProxyCacheSize "10g" }}
     {{ $proxyCacheInactive := or .ProxyCacheInactive "48h" }}
-    proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=thumbor:{{ $proxyCacheSize }} inactive={{ $proxyCacheInactive }} use_temp_path=off;
+    proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=thumbor:{{ $proxyCacheMemorySize }} inactive={{ $proxyCacheInactive }} max_size={{ $proxyCacheSize }} use_temp_path=off;
 {{ end }}
 
 {{ define "upstream" }}
@@ -119,7 +120,7 @@ proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
 proxy_set_header X-Forwarded-Ssl $proxy_x_forwarded_ssl;
 proxy_set_header X-Forwarded-Port $proxy_x_forwarded_port;
 
-{{ template "thumbor-caching" (dict "ProxyCacheSize" ($.Env.PROXY_CACHE_SIZE) "ProxyCacheInactive" ($.Env.PROXY_CACHE_INACTIVE)) }}
+{{ template "thumbor-caching" (dict "ProxyCacheSize" ($.Env.PROXY_CACHE_SIZE) "ProxyCacheMemorySize" ($.Env.PROXY_CACHE_MEMORY_SIZE) "ProxyCacheInactive" ($.Env.PROXY_CACHE_INACTIVE)) }}
 
 # Mitigate httpoxy attack (see README for details)
 proxy_set_header Proxy "";

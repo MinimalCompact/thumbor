@@ -33,6 +33,7 @@ services:
       # Normally this won't be necessary, but it helps for testing.
       - DEFAULT_HOST=localhost
       - PROXY_CACHE_SIZE
+      - PROXY_CACHE_MEMORY_SIZE
       - PROXY_CACHE_INACTIVE
     volumes:
       # this is essential for nginx-proxy to detect docker containers, scaling etc

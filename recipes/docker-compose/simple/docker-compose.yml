@@ -30,9 +30,10 @@ services:
       # Makes sure it works irrespective of the host name
       # Normally this won't be necessary, but it helps for testing.
       - DEFAULT_HOST=localhost
-      # optional: control cache size (default 100m) and inactive (default 300m)
+      # optional: control cache memory size (default 500m), cache size (default 10g) and inactive (default 300m)
       #           see https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_cache_path
-      - PROXY_CACHE_SIZE=100m
+      - PROXY_CACHE_SIZE=10g
+      - PROXY_CACHE_MEMORY_SIZE=500m
       - PROXY_CACHE_INACTIVE=300m
     volumes:
       # this is essential for nginx-proxy to detect docker containers, scaling etc

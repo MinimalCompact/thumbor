@@ -11,17 +11,19 @@ load_thumbor () {
     timeout 2m bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost/healthcheck)" != "200" ]]; do sleep 5; done' || false
 }
 
-@test "proxy cache size=100m inactive=300m by default" {
+@test "proxy cache memory size=500m, inactive=48h, max_size=10g by default" {
     load_thumbor
-    run bash -c "docker-compose -f $BASE/docker-compose.yml exec nginx-proxy bash -c 'cat /etc/nginx/conf.d/default.conf' | grep 'keys_zone=thumbor:100m inactive=300m'"
+    run bash -c "docker-compose -f $BASE/docker-compose.yml exec nginx-proxy bash -c 'cat /etc/nginx/conf.d/default.conf' | grep 'keys_zone=thumbor:500m inactive=48h max_size=10g'"
     [ $status -eq 0 ]
 }
 
-@test "proxy cache size and inactive can be set by ENV" {
-    export PROXY_CACHE_SIZE=200m
+@test "proxy cache size, memory size and inactive can be set by ENV" {
+    export PROXY_CACHE_SIZE=20g
     export PROXY_CACHE_INACTIVE=24h
+    export PROXY_CACHE_MEMORY_SIZE=10m
     load_thumbor
-    run bash -c "docker-compose -f $BASE/docker-compose.yml exec nginx-proxy bash -c 'cat /etc/nginx/conf.d/default.conf' | grep 'keys_zone=thumbor:200m inactive=24h'"
+    bash -c "docker-compose -f $BASE/docker-compose.yml exec nginx-proxy bash -c 'cat /etc/nginx/conf.d/default.conf'"
+    run bash -c "docker-compose -f $BASE/docker-compose.yml exec nginx-proxy bash -c 'cat /etc/nginx/conf.d/default.conf' | grep 'keys_zone=thumbor:10m inactive=24h max_size=20g'"
     [ $status -eq 0 ]
 }
 
