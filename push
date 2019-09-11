@@ -12,9 +12,13 @@ echo "--> pushing minimalcompact/thumbor:simdavx2"
 docker push minimalcompact/thumbor:latest-simd-avx2
 docker push minimalcompact/thumbor:$THUMBOR_VERSION-simd-avx2
 
-echo "--> pushing minimalcompact/thumbor-nginx-proxy"
+echo "--> pushing minimalcompact/thumbor-nginx-proxy (DEPRECATED)"
 docker push minimalcompact/thumbor-nginx-proxy:latest
 docker push minimalcompact/thumbor-nginx-proxy:$THUMBOR_VERSION
+
+echo "--> pushing minimalcompact/thumbor-nginx-proxy-cache"
+docker push minimalcompact/thumbor-nginx-proxy-cache:latest
+docker push minimalcompact/thumbor-nginx-proxy-cache:$THUMBOR_VERSION
 
 echo "--> pushing minimalcompact/remotecv"
 docker push minimalcompact/remotecv:latest
