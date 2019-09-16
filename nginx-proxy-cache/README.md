@@ -11,7 +11,7 @@ This image adds a proxy caching layer into `nginx-proxy`, using the built-in `pr
 ## Defaults
 
 * Cache data is stored inside the container in `/var/cache/nginx`
-* MAx cache size is set to 10Gb (`max_size=10g`)
+* Max cache size is set to 10Gb (`max_size=10g`)
 * Cached data that isn't accessed for more than 48 hours will be purged (`inactive=48h`)
 * Cache memory size is set to 500m (`keys_zone=thumbor:500m`) holds all active keys and metadata of the cache in memory
 
