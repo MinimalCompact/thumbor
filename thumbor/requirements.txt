@@ -2,7 +2,7 @@ envtpl==0.6.0
 circus==0.15.0
 circus-web==1.0.0
 boto==2.48.0
-botocore==1.10.14
+botocore==1.12.253
 dateutils==0.6.6
 numpy==1.14.3
 remotecv==2.2.2
