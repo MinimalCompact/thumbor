@@ -1,0 +1,18 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: build, test, push
+      run: |
+        ./build        
+        bash -c "for filename in tests/*.bats; do sudo bats --tap \$filename || exit 1; done"
+        echo \"${DOCKER_PASSWORD}\" | docker login -u \"${DOCKER_USERNAME}\" --password-stdin
+        ./push
