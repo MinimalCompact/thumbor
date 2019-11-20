@@ -15,7 +15,7 @@ jobs:
         git clone https://github.com/bats-core/bats-core.git
         cd bats-core
         sudo ./install.sh /usr/local
-        cd
+        cd -
         ./build        
         bash -c "for filename in tests/*.bats; do sudo bats --tap \$filename || exit 1; done"
         echo \"${DOCKER_PASSWORD}\" | docker login -u \"${DOCKER_USERNAME}\" --password-stdin
