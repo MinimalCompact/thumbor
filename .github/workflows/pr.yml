@@ -1,0 +1,13 @@
+name: PR
+
+on: [pull_request]
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: build, test
+      run: |
+        ./build        
+        bash -c "for filename in tests/*.bats; do sudo bats --tap \$filename || exit 1; done"
