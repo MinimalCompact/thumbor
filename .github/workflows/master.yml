@@ -16,7 +16,7 @@ jobs:
         cd bats-core
         sudo ./install.sh /usr/local
         cd -
-        ./build        
+        ./build
         bash -c "for filename in tests/*.bats; do sudo bats --tap \$filename || exit 1; done"
         echo \"${DOCKER_PASSWORD}\" | docker login -u \"${DOCKER_USERNAME}\" --password-stdin
         ./push
