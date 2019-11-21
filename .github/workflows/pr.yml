@@ -9,5 +9,15 @@ jobs:
     - uses: actions/checkout@v1
     - name: build, test
       run: |
-        ./build        
-        bash -c "for filename in tests/*.bats; do sudo bats --tap \$filename || exit 1; done"
+        git clone https://github.com/bats-core/bats-core.git
+        cd bats-core
+        sudo ./install.sh /usr/local
+        cd -
+        BASE=tests/setup/basic
+        docker-compose -f $BASE/docker-compose.yml up -d
+        timeout 2m bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:8888/healthcheck)" != "200" ]]; do sleep 5; done' || false
+        cd -
+        docker-compose -f $BASE/docker-compose.yml down
+        # bash -c "for filename in tests/*.bats; do sudo bats --tap \\$filename || exit 1; done"
+        # ./build
+        # bash -c "for filename in tests/*.bats; do sudo bats --tap \\$filename || exit 1; done"
