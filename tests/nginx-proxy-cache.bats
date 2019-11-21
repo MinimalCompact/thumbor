@@ -8,7 +8,7 @@ teardown () {
 
 load_thumbor () {
     docker-compose -f $BASE/docker-compose.yml up -d
-    timeout 2m bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost/healthcheck)" != "200" ]]; do sleep 5; done' || false
+    timeout 2m bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:8888/healthcheck)" != "200" ]]; do sleep 5; done' || false
 }
 
 @test "proxy cache memory size=500m, inactive=48h, max_size=10g by default" {
@@ -32,9 +32,9 @@ load_thumbor () {
     load_thumbor
     rm -rf $BASE/data/*
     # original (un-cached request)
-    run bash -c "curl -H -sSL -D - http://localhost/unsafe/500x150/i.imgur.com/Nfn80ck.png -o /dev/null |grep 'Cache-Control: max-age=123456789,public'"
+    run bash -c "curl -H -sSL -D - http://localhost:8888/unsafe/500x150/i.imgur.com/Nfn80ck.png -o /dev/null |grep 'Cache-Control: max-age=123456789,public'"
     [ $status -eq 0 ]
     # cached request
-    run bash -c "curl -H -sSL -D - http://localhost/unsafe/500x150/i.imgur.com/Nfn80ck.png -o /dev/null |grep 'Cache-Control: max-age=123456789,public'"
+    run bash -c "curl -H -sSL -D - http://localhost:8888/unsafe/500x150/i.imgur.com/Nfn80ck.png -o /dev/null |grep 'Cache-Control: max-age=123456789,public'"
     [ $status -eq 0 ]
 }
