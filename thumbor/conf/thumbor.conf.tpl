@@ -292,9 +292,17 @@ HTTP_LOADER_MAX_REDIRECTS = {{ HTTP_LOADER_MAX_REDIRECTS | default(5) }}
 ## Defaults to: 10
 HTTP_LOADER_MAX_CLIENTS = {{ HTTP_LOADER_MAX_CLIENTS | default(10) }}
 
+## Whether thumbor should forward all client headers
+## Defaults to: False
+HTTP_LOADER_FORWARD_ALL_HEADERS = {{ HTTP_LOADER_FORWARD_ALL_HEADERS | default(False) }}
+
 ## Indicates whether thumbor should forward the user agent of the requesting user
 ## Defaults to: False
 HTTP_LOADER_FORWARD_USER_AGENT = {{ HTTP_LOADER_FORWARD_USER_AGENT | default(False) }}
+
+## A list of headers the http loader will forward from the client
+## Defaults to: []
+HTTP_LOADER_FORWARD_HEADERS_WHITELIST = {{ HTTP_LOADER_FORWARD_HEADERS_WHITELIST | default([]) }}
 
 ## Default user agent for thumbor http loader requests
 ## Defaults to: Thumbor/6.3.0
