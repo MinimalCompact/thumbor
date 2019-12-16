@@ -28,4 +28,6 @@ blocks:
           - bash -c "for filename in tests/*.bats; do sudo bats --tap \$filename || exit 1; done"
           - echo "Docker push (only master)..."
           - >-
-            [ "$SEMAPHORE_GIT_BRANCH" == "master" ] && [ "${SEMAPHORE_GIT_REF_TYPE}" != "pull-request" ] && ./push && echo Push done
+            ( [ "$SEMAPHORE_GIT_BRANCH" == "master" ] && \
+              [ "${SEMAPHORE_GIT_REF_TYPE}" != "pull-request" ] && \
+              ./push && echo Push done ) || echo "Not pushed"
