@@ -10,7 +10,7 @@ services:
       # Normally this is set in connection with the number of CPU cores
       # Note however that you can also use the docker-compose scale option to dynamically
       # scale your thumbor instances
-      - THUMBOR_NUM_PROCESSES=4
+      - THUMBOR_NUM_PROCESSES=1  # TODO: circus ??
       # this would allow CORS from any origin (you can restrict to specific origins if you want)
       - CORS_ALLOW_ORIGIN
       # returns a webp image if browser Accept headers match
