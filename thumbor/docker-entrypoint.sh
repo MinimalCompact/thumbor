@@ -26,7 +26,7 @@ if [ "$1" = 'thumbor' ] || [ "$1" = 'circus' ]; then
         exec /usr/local/bin/circusd /etc/circus.ini
     else
         echo "---> Starting thumbor solo..."
-        exec python -m thumbor/server --port=$THUMBOR_PORT --conf=/app/thumbor.conf $LOG_PARAMETER
+        exec python -m thumbor.server --port=$THUMBOR_PORT --conf=/app/thumbor.conf $LOG_PARAMETER
     fi
 fi
 
