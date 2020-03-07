@@ -9,13 +9,9 @@ ENV SHELL bash
 ENV WORKON_HOME /app
 WORKDIR /app
 
-RUN pip install thumbor==7.0.0a2 envtpl circus
+RUN pip install envtpl
 
 COPY conf/thumbor.conf.tpl /app/thumbor.conf.tpl
-
-ADD conf/circus.ini.tpl /etc/
-RUN mkdir  /etc/circus.d /etc/setup.d
-ADD conf/thumbor-circus.ini.tpl /etc/circus.d/
 
 ARG SIMD_LEVEL
 
@@ -30,11 +26,18 @@ RUN PILLOW_VERSION=$(python -c 'import PIL; print(PIL.__version__)') ; \
       --global-option="build_ext" --global-option="--enable-tiff" ; \
     fi ;
 
+RUN apt-get update && apt-get install build-essential -y && \
+    mkdir -p /usr/src/app && \
+    curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python && \
+    # source $HOME/.poetry/env && \
+    cd /usr/src/app && \
+    git clone https://github.com/kkopachev/thumbor.git . && \
+    git checkout kk-multiprocess && \
+    $HOME/.poetry/bin/poetry install  --no-dev
+
 COPY docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
-# running thumbor multiprocess via circus by default
-# to override and run thumbor solo, set THUMBOR_NUM_PROCESSES=1 or unset it
-CMD ["circus"]
+CMD ["$HOME/.poetry/bin/poetry", "run", "thumbor", "-l debug", "--processes=$THUMBOR_NUM_PROCESSES"]
 
 EXPOSE 80 8888
