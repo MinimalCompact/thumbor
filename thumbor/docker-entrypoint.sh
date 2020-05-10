@@ -18,6 +18,6 @@ if [ -z ${THUMBOR_PORT+x} ]; then
 fi
 
 echo "---> Starting thumbor with $THUMBOR_NUM_PROCESSES processes..."
-exec thumbor --port=$THUMBOR_PORT --conf=/app/thumbor.conf $LOG_PARAMETER --processes=$THUMBOR_NUM_PROCESSES
+exec thumbor --port=$THUMBOR_PORT --conf=/app/thumbor.conf $LOG_PARAMETER --processes=${THUMBOR_NUM_PROCESSES:-1}
 
 exec "$@"
