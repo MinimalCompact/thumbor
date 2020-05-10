@@ -29,6 +29,6 @@ RUN PILLOW_VERSION=$(python -c 'import PIL; print(PIL.__version__)') ; \
 COPY docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
-CMD ["thumbor" "--port=$THUMBOR_PORT" "-l ${LOG_LEVEL:-debug}" "--processes=${THUMBOR_NUM_PROCESSES:-1}"]
+CMD ["thumbor", "--port=$THUMBOR_PORT", "-l ${LOG_LEVEL:-debug}", "--processes=${THUMBOR_NUM_PROCESSES:-1}"]
 
 EXPOSE 80 8888
