@@ -27,7 +27,7 @@ blocks:
           - "./build && echo Build done"
           - bash -c "for filename in tests/*.bats; do sudo bats --tap \$filename || exit 1; done"
           - >-
-            ( [ "$SEMAPHORE_GIT_BRANCH" == "thumbor-7a" ] && \
+            ( [ "$SEMAPHORE_GIT_BRANCH" == "thumbor-7a5" ] && \
               [ "${SEMAPHORE_GIT_REF_TYPE}" != "pull-request" ] && \
               ./push $SEMAPHORE_GIT_BRANCH && echo Push $SEMAPHORE_GIT_BRANCH done ) || echo "Not pushed $SEMAPHORE_GIT_BRANCH"
           - echo "Docker push (only master)..."

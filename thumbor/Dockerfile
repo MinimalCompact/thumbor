@@ -9,7 +9,7 @@ ENV SHELL bash
 ENV WORKON_HOME /app
 WORKDIR /app
 
-RUN pip install envtpl
+RUN pip install thumbor==7.0.0a5 envtpl
 
 COPY conf/thumbor.conf.tpl /app/thumbor.conf.tpl
 
@@ -26,18 +26,9 @@ RUN PILLOW_VERSION=$(python -c 'import PIL; print(PIL.__version__)') ; \
       --global-option="build_ext" --global-option="--enable-tiff" ; \
     fi ;
 
-RUN apt-get update && apt-get install build-essential -y && \
-    mkdir -p /usr/src/app && \
-    curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python && \
-    # source $HOME/.poetry/env && \
-    cd /usr/src/app && \
-    git clone https://github.com/kkopachev/thumbor.git . && \
-    git checkout kk-multiprocess && \
-    $HOME/.poetry/bin/poetry install  --no-dev
-
 COPY docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
-CMD ["$HOME/.poetry/bin/poetry", "run", "thumbor", "-l debug", "--processes=$THUMBOR_NUM_PROCESSES"]
+CMD ["thumbor" "--port=$THUMBOR_PORT" "-l debug" "--processes=$THUMBOR_NUM_PROCESSES"]
 
 EXPOSE 80 8888
