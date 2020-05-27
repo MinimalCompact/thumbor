@@ -13,6 +13,8 @@ Key Features and Goals:
 * remotecv docker image (for async smart cropping and feature detection)
 * Clear version tagging to match Thumbor versions
 
+[Dockerhub minimalcompact/thumbor](https://hub.docker.com/r/minimalcompact/thumbor)
+
 ## Quick Start
 
 ```
@@ -27,6 +29,7 @@ $ docker run -p 80:80 -e THUMBOR_NUM_PROCESSES=8 minimalcompact/thumbor
 $ wget http://localhost/unsafe/500x150/i.imgur.com/Nfn80ck.png
 
 ```
+https://hub.docker.com/r/minimalcompact/thumbor
 
 ## Recipes
 
