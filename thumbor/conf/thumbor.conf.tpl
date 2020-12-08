@@ -725,3 +725,6 @@ RESULT_STORAGE_CLOUD_STORAGE_BUCKET_ID = '{{ RESULT_STORAGE_CLOUD_STORAGE_BUCKET
 
 ######################### tc_prometheus ########################################
 PROMETHEUS_SCRAPE_PORT = {{ PROMETHEUS_SCRAPE_PORT | default(8000) }} # Port the prometheus client should listen on
+
+##################### Thumbor Community Extensions #############################
+COMMUNITY_EXTENSIONS = {{ COMMUNITY_EXTENSIONS | default([]) }}
