@@ -19,6 +19,6 @@ tc-redis==1.0.1
 thumbor-cloud-storage==3.0.0
 pgmagick==0.7.4
 graphicsmagick-engine==0.1.1
-cairosvg==1.0.22
+cairosvg==2.5.1
 opencv-python==4.1.0.25
 tc_prometheus
