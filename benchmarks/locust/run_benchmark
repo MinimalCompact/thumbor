@@ -4,37 +4,18 @@ docker-compose build
 docker-compose down
 
 for procs in 1 3 6 9; do
-  for threads in 0 3 6; do
-    export THUMBOR_DOCKER_PROCS=1
+  for docker_procs in 1 3 6 9; do
+    export THUMBOR_DOCKER_PROCS=$docker_procs
     export THUMBOR_NUM_PROCESSES=$procs
-    export ENGINE_THREADPOOL_SIZE=$threads
 
     echo
-    echo "***************** BEGIN BENCHMARK WITH ${THUMBOR_DOCKER_PROCS} Docker processes, ${THUMBOR_NUM_PROCESSES} thumbor processes and ${ENGINE_THREADPOOL_SIZE} threads ********************"
+    echo "***************** BEGIN BENCHMARK WITH ${THUMBOR_DOCKER_PROCS} Docker processes, ${THUMBOR_NUM_PROCESSES} thumbor processes ********************"
     echo
     docker-compose up -d --scale locust-slave=3 --scale thumbor=${THUMBOR_DOCKER_PROCS} --force-recreate --always-recreate-deps --renew-anon-volumes
     docker-compose logs -f locust
     docker-compose down
     echo
-    echo "***************** END BENCHMARK WITH ${THUMBOR_DOCKER_PROCS} Docker processes, ${THUMBOR_NUM_PROCESSES} thumbor processes and ${ENGINE_THREADPOOL_SIZE} threads ********************"
-    echo
-  done
-done
-
-for procs in 3 6 9; do
-  for threads in 0 3 6; do
-    export THUMBOR_DOCKER_PROCS=$procs
-    export THUMBOR_NUM_PROCESSES=1
-    export ENGINE_THREADPOOL_SIZE=$threads
-
-    echo
-    echo "***************** BEGIN BENCHMARK WITH ${THUMBOR_DOCKER_PROCS} Docker processes, ${THUMBOR_NUM_PROCESSES} thumbor processes and ${ENGINE_THREADPOOL_SIZE} threads ********************"
-    echo
-    docker-compose up -d --scale locust-slave=3 --scale thumbor=${THUMBOR_DOCKER_PROCS} --force-recreate --always-recreate-deps --renew-anon-volumes
-    docker-compose logs -f locust
-    docker-compose down
-    echo
-    echo "***************** END BENCHMARK WITH ${THUMBOR_DOCKER_PROCS} Docker processes, ${THUMBOR_NUM_PROCESSES} thumbor processes and ${ENGINE_THREADPOOL_SIZE} threads ********************"
+    echo "***************** END BENCHMARK WITH ${THUMBOR_DOCKER_PROCS} Docker processes, ${THUMBOR_NUM_PROCESSES} thumbor processes ********************"
     echo
   done
 done

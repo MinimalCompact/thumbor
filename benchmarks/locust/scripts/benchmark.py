@@ -1,4 +1,4 @@
-from locust import HttpLocust, TaskSet, task
+from locust import HttpLocust, TaskSet, task, between
 
 
 class HealthTaskSet(TaskSet):
@@ -17,3 +17,4 @@ class SimpleTaskSet(TaskSet):
 
 class Benchmark(HttpLocust):
     task_set = SimpleTaskSet
+    wait_time = between(0, 0.1)
