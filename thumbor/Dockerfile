@@ -4,6 +4,27 @@ LABEL maintainer="MinimalCompact"
 
 VOLUME /data
 
+# base OS packages
+RUN  \
+    awk '$1 ~ "^deb" { $3 = $3 "-backports"; print; exit }' /etc/apt/sources.list > /etc/apt/sources.list.d/backports.list && \
+    apt-get update && \
+    apt-get -y upgrade && \
+    apt-get -y autoremove && \
+    apt-get install -y -q \
+        git \
+        curl \
+        libjpeg-turbo-progs \
+        graphicsmagick \
+        libgraphicsmagick++3 \
+        libgraphicsmagick++1-dev \
+        libgraphicsmagick-q16-3 \
+        zlib1g-dev \
+        libboost-python-dev \
+        libmemcached-dev \
+        gifsicle \
+        ffmpeg && \
+    apt-get clean
+
 ENV HOME /app
 ENV SHELL bash
 ENV WORKON_HOME /app
