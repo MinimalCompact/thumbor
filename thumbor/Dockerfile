@@ -22,6 +22,7 @@ RUN  \
         libboost-python-dev \
         libmemcached-dev \
         gifsicle \
+	gosu \
         ffmpeg && \
     apt-get clean
 
@@ -66,7 +67,7 @@ RUN PILLOW_VERSION=$(python -c 'import PIL; print(PIL.__version__)') ; \
     --global-option="build_ext" --global-option="--enable-tiff"
 
 COPY docker-entrypoint.sh /
-ENTRYPOINT ["/docker-entrypoint.sh"]
+ENTRYPOINT ["sh", "/docker-entrypoint.sh"]
 
 # running thumbor multiprocess via circus by default
 # to override and run thumbor solo, set THUMBOR_NUM_PROCESSES=1 or unset it

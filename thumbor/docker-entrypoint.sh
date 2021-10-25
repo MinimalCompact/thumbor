@@ -20,14 +20,21 @@ if [ -z ${THUMBOR_PORT+x} ]; then
     THUMBOR_PORT=80
 fi
 
+# Create thumbor user with UID 9001
+useradd --shell /bin/bash -u 9001 -o -c "" -m thumbor
+
+# Create /data directory and set its ownership for file_storage
+mkdir -p /data
+chown thumbor:thumbor /data
+
 if [ "$1" = 'thumbor' ] || [ "$1" = 'circus' ]; then
     if [ "${THUMBOR_NUM_PROCESSES:-1}" -gt "1" ]; then
         echo "---> Starting thumbor circus with ${THUMBOR_NUM_PROCESSES} processes..."
-        exec /usr/local/bin/circusd /etc/circus.ini
+        exec gosu thumbor /usr/local/bin/circusd /etc/circus.ini
     else
         echo "---> Starting thumbor solo..."
-        exec python -m thumbor/server --port=$THUMBOR_PORT --conf=/app/thumbor.conf $LOG_PARAMETER
+        exec gosu thumbor python -m thumbor/server --port=$THUMBOR_PORT --conf=/app/thumbor.conf $LOG_PARAMETER
     fi
 fi
 
-exec "$@"
+exec gosu thumbor "$@"
