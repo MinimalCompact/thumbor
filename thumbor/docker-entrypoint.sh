@@ -23,9 +23,9 @@ fi
 # Create thumbor user with UID 9001
 useradd --shell /bin/bash -u 9001 -o -c "" -m thumbor
 
-# Create /data directory and set its ownership for file_storage
-mkdir -p /data
-chown thumbor:thumbor /data
+# Create storage directories and set ownership for file_storage
+mkdir -p "${FILE_STORAGE_ROOT_PATH:-/data/storage}" "${RESULT_STORAGE_FILE_STORAGE_ROOT_PATH:-/data/result_storage}"
+chown thumbor:thumbor "${FILE_STORAGE_ROOT_PATH:-/data/storage}" "${RESULT_STORAGE_FILE_STORAGE_ROOT_PATH:-/data/result_storage}"
 
 if [ "$1" = 'thumbor' ] || [ "$1" = 'circus' ]; then
     if [ "${THUMBOR_NUM_PROCESSES:-1}" -gt "1" ]; then
