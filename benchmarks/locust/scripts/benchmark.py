@@ -1,4 +1,4 @@
-from locust import HttpLocust, TaskSet, task
+from locust import HttpUser, TaskSet, task
 
 
 class HealthTaskSet(TaskSet):
@@ -15,5 +15,5 @@ class SimpleTaskSet(TaskSet):
     def fit_in(self):
         self.client.get('/unsafe/fit-in/100x150/i.imgur.com/Nfn80ck.png')
 
-class Benchmark(HttpLocust):
-    task_set = SimpleTaskSet
+class Benchmark(HttpUser):
+    tasks = [SimpleTaskSet]

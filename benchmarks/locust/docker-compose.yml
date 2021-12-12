@@ -6,10 +6,6 @@ services:
       # we can control the number of processes and threads via ENV
       - THUMBOR_NUM_PROCESSES=${THUMBOR_NUM_PROCESSES:-1}
       - ENGINE_THREADPOOL_SIZE=${ENGINE_THREADPOOL_SIZE:-0}
-      # this would allow CORS from any origin (you can restrict to specific origins if you want)
-      - CORS_ALLOW_ORIGIN=*
-      # returns a webp image if browser Accept headers match
-      - AUTO_WEBP=True
       # no result storage / caching, so we measure thumbor's processing
       - RESULT_STORAGE=thumbor.result_storages.no_storage
       - RESULT_STORAGE_STORES_UNSAFE=True
@@ -19,6 +15,20 @@ services:
     volumes:
       # mounting a /data folder to store cached images
       - ./data:/data
+  imagor:
+    image: shumc/imagor
+    user: 0:0
+    environment:
+      # we can control the number of processes and threads via ENV
+      - VIPS_CONCURRENCY_LEVEL=${THUMBOR_NUM_PROCESSES:-1}
+      - IMAGOR_UNSAFE=1
+      # no result storage / caching, so we measure imagor's processing
+      # keeping loader storage, to make tests more consistent
+      # (eliminate time to fetch external images)
+      - FILE_STORAGE_BASE_DIR=/data
+    volumes:
+      # mounting a /data folder to store cached images
+      - ./data_imagor:/data
   # This is the master locust engine
   locust:
     build:
@@ -32,16 +42,16 @@ services:
       - ./scripts:/opt/scripts
       - ./reports:/opt/reports
     command: "locust
-              --host=http://thumbor
+              --host=http://${TEST_HOST}
               -f /opt/scripts/benchmark.py
-              --no-web
-              -c 200
+              --headless
+              -u 200
               -r 4
               --run-time 2m
               --master
-              --expect-slaves 3
+              --expect-workers 3
               --only-summary
-              --csv=/opt/reports/${THUMBOR_DOCKER_PROCS}-${THUMBOR_NUM_PROCESSES}-${ENGINE_THREADPOOL_SIZE}"
+              --csv=/opt/reports/${TEST_HOST}/${THUMBOR_DOCKER_PROCS}-${THUMBOR_NUM_PROCESSES}"
   # this is the locust slave. We can control the number of slaves using docker-compose scale
   locust-slave:
     build:
@@ -51,8 +61,8 @@ services:
       - ./scripts:/opt/scripts
       - ./reports:/opt/reports
     command: "locust
-              --host=http://thumbor
+              --host=http://${TEST_HOST}
               -f /opt/scripts/benchmark.py
-              --no-web
-              --slave
+              --headless
+              --worker
               --master-host=locust"
