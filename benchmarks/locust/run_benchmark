@@ -37,5 +37,6 @@ for host in imagor:8000 thumbor; do
   cd reports/${host}
   cat *_stats.csv |head -1 | sed 's/$/,"Run Configuration"/' >stats.csv
   for i in *_stats.csv; do awk '{print $0 ",\"[" FILENAME "]\"" }' $i | tail -n +2 | sed 's/_stats\.csv//' >> stats.csv; done
+  sed -i -e 's/\r//g' stats.csv
   cd ../..
 done
