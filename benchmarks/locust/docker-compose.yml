@@ -17,7 +17,6 @@ services:
       - ./data:/data
   imagor:
     image: shumc/imagor:0.6.4
-    user: 0:0
     environment:
       # we can control the number of processes and threads via ENV
       - VIPS_CONCURRENCY_LEVEL=${THUMBOR_NUM_PROCESSES:-1}
@@ -25,7 +24,8 @@ services:
       # no result storage / caching, so we measure imagor's processing
       # keeping loader storage, to make tests more consistent
       # (eliminate time to fetch external images)
-      - FILE_STORAGE_BASE_DIR=/data
+      - FILE_LOADER_BASE_DIR=/mnt/data
+      - FILE_STORAGE_BASE_DIR=/mnt/data
     volumes:
       # mounting a /data folder to store cached images
       - ./data_imagor:/data
