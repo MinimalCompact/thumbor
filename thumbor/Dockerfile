@@ -30,7 +30,14 @@ ENV SHELL bash
 ENV WORKON_HOME /app
 WORKDIR /app
 
-RUN pip install thumbor==7.0.0a5 envtpl
+COPY proc-requirements.txt /app/proc-requirements.txt
+RUN pip install --trusted-host None --no-cache-dir -r /app/proc-requirements.txt
+RUN pip install thumbor==7.0.0
+COPY lib-requirements.txt /app/lib-requirements.txt
+RUN pip install --trusted-host None --no-cache-dir -r /app/lib-requirements.txt
+RUN pip install --no-dependencies tc-aws==6.2.15
+RUN pip install --no-dependencies tc-core==0.4.1
+RUN pip install --no-dependencies tc-shortener==0.2.2
 
 COPY conf/thumbor.conf.tpl /app/thumbor.conf.tpl
 
