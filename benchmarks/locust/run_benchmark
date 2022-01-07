@@ -3,33 +3,31 @@
 docker-compose build
 docker-compose down
 
-for procs in 1 3 6 9; do
-    export THUMBOR_DOCKER_PROCS=1
-    export THUMBOR_NUM_PROCESSES=$procs
+export THUMBOR_DOCKER_PROCS=1
+export THUMBOR_NUM_PROCESSES=$(nproc)
 
-    export TEST_HOST=imagor:8000
-    echo
-    echo "***************** BEGIN BENCHMARK FOR ${TEST_HOST} WITH ${THUMBOR_DOCKER_PROCS} Docker processes, ${THUMBOR_NUM_PROCESSES} imagor processes ********************"
-    echo
-    mkdir -p reports/${TEST_HOST}
-    docker-compose up -d --scale locust-slave=3 --scale imagor=${THUMBOR_DOCKER_PROCS} --force-recreate --always-recreate-deps --renew-anon-volumes
-    docker-compose logs -f locust
-    docker-compose down
-    echo
-    echo "***************** END BENCHMARK WITH ${THUMBOR_DOCKER_PROCS} Docker processes, ${THUMBOR_NUM_PROCESSES} thumbor processes and ${ENGINE_THREADPOOL_SIZE} threads ********************"
-    echo
-    export TEST_HOST=thumbor
-    echo
-    echo "***************** BEGIN BENCHMARK FOR ${TEST_HOST} WITH ${THUMBOR_DOCKER_PROCS} Docker processes, ${THUMBOR_NUM_PROCESSES} thumbor processes ********************"
-    echo
-    mkdir -p reports/${TEST_HOST}
-    docker-compose up -d --scale locust-slave=3 --scale thumbor=${THUMBOR_DOCKER_PROCS} --force-recreate --always-recreate-deps --renew-anon-volumes
-    docker-compose logs -f locust
-    docker-compose down
-    echo
-    echo "***************** END BENCHMARK WITH ${THUMBOR_DOCKER_PROCS} Docker processes, ${THUMBOR_NUM_PROCESSES} thumbor processes and ${ENGINE_THREADPOOL_SIZE} threads ********************"
-    echo
-done
+export TEST_HOST=imagor:8000
+echo
+echo "***************** BEGIN BENCHMARK FOR ${TEST_HOST} WITH ${THUMBOR_DOCKER_PROCS} Docker processes, ${THUMBOR_NUM_PROCESSES} imagor processes ********************"
+echo
+mkdir -p reports/${TEST_HOST}
+docker-compose up -d --scale locust-slave=3 --scale imagor=${THUMBOR_DOCKER_PROCS} --force-recreate --always-recreate-deps --renew-anon-volumes
+docker-compose logs -f locust
+docker-compose down
+echo
+echo "***************** END BENCHMARK WITH ${THUMBOR_DOCKER_PROCS} Docker processes, ${THUMBOR_NUM_PROCESSES} imagor processes and ${ENGINE_THREADPOOL_SIZE} threads ********************"
+echo
+export TEST_HOST=thumbor
+echo
+echo "***************** BEGIN BENCHMARK FOR ${TEST_HOST} WITH ${THUMBOR_DOCKER_PROCS} Docker processes, ${THUMBOR_NUM_PROCESSES} thumbor processes ********************"
+echo
+mkdir -p reports/${TEST_HOST}
+docker-compose up -d --scale locust-slave=3 --scale thumbor=${THUMBOR_DOCKER_PROCS} --force-recreate --always-recreate-deps --renew-anon-volumes
+docker-compose logs -f locust
+docker-compose down
+echo
+echo "***************** END BENCHMARK WITH ${THUMBOR_DOCKER_PROCS} Docker processes, ${THUMBOR_NUM_PROCESSES} thumbor processes and ${ENGINE_THREADPOOL_SIZE} threads ********************"
+echo
 
 # combine CSV files into one consolidated file for requests and distribution
 # (it's not super-elegant, but seems to work...)

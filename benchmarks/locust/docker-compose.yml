@@ -16,7 +16,7 @@ services:
       # mounting a /data folder to store cached images
       - ./data:/data
   imagor:
-    image: shumc/imagor
+    image: shumc/imagor:0.6.4
     user: 0:0
     environment:
       # we can control the number of processes and threads via ENV
