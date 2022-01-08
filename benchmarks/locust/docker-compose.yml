@@ -1,7 +1,7 @@
 version: "3"
 services:
   thumbor:
-    image: minimalcompact/thumbor:7a5
+    image: minimalcompact/thumbor:7
     environment:
       # we can control the number of processes and threads via ENV
       - THUMBOR_NUM_PROCESSES=${THUMBOR_NUM_PROCESSES:-1}

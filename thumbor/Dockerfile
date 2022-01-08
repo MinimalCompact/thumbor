@@ -31,8 +31,8 @@ ENV WORKON_HOME /app
 WORKDIR /app
 
 RUN pip install thumbor==7.0.0
-COPY lib-requirements.txt /app/lib-requirements.txt
-RUN pip install --trusted-host None --no-cache-dir -r /app/lib-requirements.txt
+COPY requirements.txt /app/requirements.txt
+RUN pip install --trusted-host None --no-cache-dir -r /app/requirements.txt
 RUN pip install --no-dependencies tc-aws==6.2.15
 RUN pip install --no-dependencies tc-core==0.4.1
 RUN pip install --no-dependencies tc-shortener==0.2.2
