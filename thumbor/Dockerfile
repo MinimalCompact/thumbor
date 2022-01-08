@@ -31,7 +31,6 @@ ENV WORKON_HOME /app
 WORKDIR /app
 
 COPY proc-requirements.txt /app/proc-requirements.txt
-RUN pip install --trusted-host None --no-cache-dir -r /app/proc-requirements.txt
 RUN pip install thumbor==7.0.0
 COPY lib-requirements.txt /app/lib-requirements.txt
 RUN pip install --trusted-host None --no-cache-dir -r /app/lib-requirements.txt
