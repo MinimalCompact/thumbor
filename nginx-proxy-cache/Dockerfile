@@ -1,4 +1,4 @@
-FROM jwilder/nginx-proxy
+FROM nginx-proxy/nginx-proxy
 
 LABEL maintainer="MinimalCompact"
 
