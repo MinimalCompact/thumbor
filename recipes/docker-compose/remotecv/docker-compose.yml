@@ -50,7 +50,7 @@ services:
       - PROXY_CACHE_INACTIVE=300m
     volumes:
       # this is essential for nginx-proxy to detect docker containers, scaling etc
-      # see https://github.com/jwilder/nginx-proxy
+      # see https://github.com/nginx-proxy/nginx-proxy
       - /var/run/docker.sock:/tmp/docker.sock:ro
       # mapping cache folder, to persist it independently of the container
       - ./cache:/var/cache/nginx
