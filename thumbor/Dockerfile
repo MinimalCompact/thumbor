@@ -1,4 +1,4 @@
-FROM python:2
+FROM python:2.7.18-buster
 
 LABEL maintainer="MinimalCompact"
 
