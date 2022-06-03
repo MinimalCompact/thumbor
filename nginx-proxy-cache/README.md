@@ -17,7 +17,7 @@ This image adds a proxy caching layer into `nginx-proxy`, using the built-in `pr
 
 ## Overriding defaults
 
-* You can/should mount a volume to persist cached data even when the container is recreated, e.g. `docker run -v /var/run/docker.sock:/tmp/docker.sock:ro -v /path/to/cache:/var/nginx/cache minimalcompact/thumbor-nginx-proxy-cache`
+* You can/should mount a volume to persist cached data even when the container is recreated, e.g. `docker run -v /var/run/docker.sock:/tmp/docker.sock:ro -v /path/to/cache:/var/cache/nginx minimalcompact/thumbor-nginx-proxy-cache`
 * use `PROXY_CACHE_SIZE`, `PROXY_CACHE_INACTIVE`, `PROXY_CACHE_MEMORY_SIZE` to override the max cache size, inactive time or memory size
 
 ## Examples

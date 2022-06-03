@@ -12,8 +12,9 @@ blocks:
       prologue:
         commands:
           # Authenticate to the registry for all jobs in the block
-          # (but not for forked PRs)
-          - "[ \"${SEMAPHORE_GIT_PR_SLUG}\" != \"${SEMAPHORE_GIT_REPO_SLUG}\" ] || echo \"${DOCKER_PASSWORD}\" | docker login -u \"${DOCKER_USERNAME}\" --password-stdin"
+          # (but not for pull requests)
+          - >-
+            [ "${SEMAPHORE_GIT_REF_TYPE}" == "pull-request" ] || echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
           - git clone https://github.com/bats-core/bats-core.git
           - cd bats-core
           - sudo ./install.sh /usr/local
@@ -26,4 +27,7 @@ blocks:
           - "./build && echo Build done"
           - bash -c "for filename in tests/*.bats; do sudo bats --tap \$filename || exit 1; done"
           - echo "Docker push (only master)..."
-          - "[ \"$SEMAPHORE_GIT_BRANCH\" != \"master\" ] || ./push && echo Push done"
+          - >-
+            ( [ "$SEMAPHORE_GIT_BRANCH" == "master" ] && \
+              [ "${SEMAPHORE_GIT_REF_TYPE}" != "pull-request" ] && \
+              ./push && echo Push done ) || echo "Not pushed"

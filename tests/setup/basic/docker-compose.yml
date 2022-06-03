@@ -42,8 +42,7 @@ services:
       # mapping cache folder, only needed to test that cache is stored
       - ./data:/var/cache/nginx
     ports:
-      - "80:80"
-      - "443:443"
+      - "8888:80"
     restart: always
     networks:
       - app
