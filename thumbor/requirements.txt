@@ -4,7 +4,7 @@ circus-web==1.0.0
 boto==2.48.0
 botocore==1.12.253
 dateutils==0.6.6
-numpy==1.14.3
+numpy==1.22.0
 remotecv==2.2.2
 opencv-engine==1.0.1
 thumbor==6.7.5
