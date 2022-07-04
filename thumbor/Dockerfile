@@ -30,12 +30,16 @@ ENV SHELL bash
 ENV WORKON_HOME /app
 WORKDIR /app
 
-RUN pip install thumbor==7.0.0
+RUN pip install thumbor==7.0.10
 COPY requirements.txt /app/requirements.txt
 RUN pip install --trusted-host None --no-cache-dir -r /app/requirements.txt
 RUN pip install --no-dependencies tc-aws==6.2.15
 RUN pip install --no-dependencies tc-core==0.4.1
 RUN pip install --no-dependencies tc-shortener==0.2.2
+
+RUN pip install thumbor-request-modifier==2.0.4
+RUN pip install git+https://github.com/mbarouski/thumbor-redis.git@master
+RUN pip install git+https://github.com/mbarouski/thumbor-prometheus.git@master
 
 COPY conf/thumbor.conf.tpl /app/thumbor.conf.tpl
 
@@ -55,6 +59,7 @@ RUN PILLOW_VERSION=$(python -c 'import PIL; print(PIL.__version__)') ; \
 COPY docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
-CMD ["thumbor", "--port=$THUMBOR_PORT", "-l ${LOG_LEVEL:-debug}", "--processes=${THUMBOR_NUM_PROCESSES:-1}"]
+CMD ["thumbor", "--port=8000", "-l ${LOG_LEVEL:-debug}", "--processes=${THUMBOR_NUM_PROCESSES:-1}"]
 
-EXPOSE 80 8888
+# Thumbor is on 8000, Prometheus is on 8001
+EXPOSE 8000 8001

@@ -155,27 +155,27 @@ ENGINE_THREADPOOL_SIZE = {{ ENGINE_THREADPOOL_SIZE | default(0) }}
 
 ## The metrics backend thumbor should use to measure internal actions. This must
 ## be the full name of a python module (python must be able to import it)
-## Defaults to: 'thumbor.metrics.logger_metrics'
-METRICS = '{{ METRICS | default('thumbor.metrics.logger_metrics') }}'
+## Defaults to: 'tc_prometheus.metrics.prometheus_metrics'
+METRICS = '{{ METRICS | default('tc_prometheus.metrics.prometheus_metrics') }}'
 
 ## The loader thumbor should use to load the original image. This must be the
 ## full name of a python module (python must be able to import it)
-## Defaults to: thumbor.loaders.http_loader
-LOADER = '{{ LOADER | default('thumbor.loaders.http_loader') }}'
+## Defaults to: 'thumbor_request_modifier.loader'
+LOADER = '{{ LOADER | default('thumbor_request_modifier.loader') }}'
 
 ## The file storage thumbor should use to store original images. This must be the
 ## full name of a python module (python must be able to import it)
-## Defaults to: thumbor.storages.file_storage
-STORAGE = '{{ STORAGE | default('thumbor.storages.file_storage') }}'
+## Defaults to: 'tc_redis.result_storages.redis_result_storage'
+STORAGE = '{{ STORAGE | default('tc_redis.result_storages.redis_result_storage') }}'
 STORAGE_BUCKET = '{{ STORAGE_BUCKET | default('') }}'
 RESULT_STORAGE_BUCKET = '{{ RESULT_STORAGE_BUCKET | default('') }}'
 
-
 ## The result storage thumbor should use to store generated images. This must be
 ## the full name of a python module (python must be able to import it)
-## Defaults to: None
+## Defaults to: 'tc_redis.result_storages.redis_result_storage'
 
-RESULT_STORAGE = '{{ RESULT_STORAGE | default('thumbor.result_storages.file_storage') }}'
+RESULT_STORAGE = '{{ RESULT_STORAGE | default('tc_redis.result_storages.redis_result_storage') }}'
+
 
 
 ## The imaging engine thumbor should use to perform image operations. This must
@@ -305,8 +305,8 @@ HTTP_LOADER_FORWARD_USER_AGENT = {{ HTTP_LOADER_FORWARD_USER_AGENT | default(Fal
 HTTP_LOADER_FORWARD_HEADERS_WHITELIST = {{ HTTP_LOADER_FORWARD_HEADERS_WHITELIST | default([]) }}
 
 ## Default user agent for thumbor http loader requests
-## Defaults to: Thumbor/6.3.0
-HTTP_LOADER_DEFAULT_USER_AGENT = '{{ HTTP_LOADER_DEFAULT_USER_AGENT | default('Thumbor/6.3.0') }}'
+## Defaults to: Thumbor/7.0.10
+HTTP_LOADER_DEFAULT_USER_AGENT = '{{ HTTP_LOADER_DEFAULT_USER_AGENT | default('Thumbor/7.0.10') }}'
 
 ## The proxy host needed to load images through
 ## Defaults to: None
@@ -447,6 +447,14 @@ REDIS_STORAGE_SERVER_PASSWORD = {{ REDIS_STORAGE_SERVER_PASSWORD | default(None)
 ## Defaults to: True
 REDIS_STORAGE_IGNORE_ERRORS = {{ REDIS_STORAGE_IGNORE_ERRORS | default(True) }}
 
+## Redis storage mode, one of: 'cluster', 'single_node', 'sentinel'
+## Defaults to: 'cluster'
+REDIS_STORAGE_MODE = '{{ REDIS_STORAGE_MODE | default('cluster') }}'
+
+## Instances of Redis cluster for storage in form '<ip1>:<port1>,<ip2:port2>'
+## Defaults to: ''
+REDIS_CLUSTER_STORAGE_STARTUP_INSTANCES = '{{ REDIS_CLUSTER_STORAGE_STARTUP_INSTANCES | default('') }}'
+
 ################################################################################
 
 
@@ -471,6 +479,14 @@ REDIS_RESULT_STORAGE_SERVER_PASSWORD = {{ REDIS_RESULT_STORAGE_SERVER_PASSWORD |
 ## Ignore Redis result storage errors
 ## Defaults to: True
 REDIS_RESULT_STORAGE_IGNORE_ERRORS = {{ REDIS_RESULT_STORAGE_IGNORE_ERRORS | default(True) }}
+
+## Redis result storage mode, one of: 'cluster', 'single_node', 'sentinel'
+## Defaults to: 'cluster'
+REDIS_RESULT_STORAGE_MODE = '{{ REDIS_RESULT_STORAGE_MODE | default('cluster') }}'
+
+## Instances of Redis cluster for result storage in form '<ip1>:<port1>,<ip2:port2>'
+## Defaults to: ''
+REDIS_CLUSTER_RESULT_STORAGE_STARTUP_INSTANCES = '{{ REDIS_CLUSTER_RESULT_STORAGE_STARTUP_INSTANCES | default('') }}'
 
 ################################################################################
 
@@ -726,7 +742,13 @@ RESULT_STORAGE_CLOUD_STORAGE_BUCKET_ID = '{{ RESULT_STORAGE_CLOUD_STORAGE_BUCKET
 ################################################################################
 
 ######################### tc_prometheus ########################################
-PROMETHEUS_SCRAPE_PORT = {{ PROMETHEUS_SCRAPE_PORT | default(8000) }} # Port the prometheus client should listen on
+## Port the prometheus client should listen on
+PROMETHEUS_SCRAPE_PORT = {{ PROMETHEUS_SCRAPE_PORT | default(8001) }}
 
 ##################### Thumbor Community Extensions #############################
 COMMUNITY_EXTENSIONS = {{ COMMUNITY_EXTENSIONS | default([]) }}
+
+##################### Thumbor request modifier #############################
+## What modifications should be performed on request
+## Defaults to: []
+HTTP_LOADER_REQUEST_MODIFIER = {{ HTTP_LOADER_REQUEST_MODIFIER | default([]) }}
