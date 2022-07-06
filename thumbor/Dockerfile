@@ -37,9 +37,9 @@ RUN pip install --no-dependencies tc-aws==6.2.15
 RUN pip install --no-dependencies tc-core==0.4.1
 RUN pip install --no-dependencies tc-shortener==0.2.2
 
-RUN pip install thumbor-request-modifier==2.0.4
-RUN pip install git+https://github.com/mbarouski/thumbor-redis.git@master
-RUN pip install git+https://github.com/mbarouski/thumbor-prometheus.git@master
+RUN pip install thumbor_request_modifier==2.0.4
+RUN pip install tc_redis==2.3.0
+RUN pip install git+https://github.com/mbarouski/thumbor-prometheus.git@472ce48950b5eae535fadaf98c28ce373086f4bb
 
 COPY conf/thumbor.conf.tpl /app/thumbor.conf.tpl
 
