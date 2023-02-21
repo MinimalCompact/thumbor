@@ -22,5 +22,6 @@ graphicsmagick-engine==0.1.1
 cairosvg==1.0.22
 opencv-python==4.2.0.32
 sentry-sdk==1.0.0
-tc_prometheus
+tc_prometheus==0.1.1
 rsa==3.4.2
+protobuf==3.18.0rc2
