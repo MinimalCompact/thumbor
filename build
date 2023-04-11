@@ -60,15 +60,6 @@ docker buildx build $EXTRA_ARGUMENTS --build-arg SIMD_LEVEL=avx2  -f thumbor/Doc
  $EXTRA_TAG \
  thumbor/
 
-
-echo "--> BUILDING minimalcompact/thumbor-nginx-proxy (DEPRECATED)"
-[ "$BRANCH" == "master" ] && EXTRA_TAG="--tag minimalcompact/thumbor-nginx-proxy:latest"
-docker buildx build $EXTRA_ARGUMENTS --pull -f nginx-proxy/Dockerfile \
- --tag minimalcompact/thumbor-nginx-proxy \
- --tag minimalcompact/thumbor-nginx-proxy:$THUMBOR_VERSION  \
- $EXTRA_TAG \
- nginx-proxy/
-
 echo "--> BUILDING minimalcompact/thumbor-nginx-proxy-cache"
 [ "$BRANCH" == "master" ] && EXTRA_TAG="--tag minimalcompact/thumbor-nginx-proxy-cache:latest"
 docker buildx build $EXTRA_ARGUMENTS --pull -f nginx-proxy-cache/Dockerfile \
