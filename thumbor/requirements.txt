@@ -9,3 +9,4 @@ redis==3.5.3
 raven==6.10.0
 cairosvg==2.5.2
 pycurl==7.44.1
+thumbor==7.0.0
