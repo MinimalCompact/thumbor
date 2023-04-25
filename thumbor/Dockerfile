@@ -1,4 +1,4 @@
-FROM python:2.7.18-buster
+FROM python:3.9
 
 LABEL maintainer="MinimalCompact"
 
@@ -30,46 +30,31 @@ ENV SHELL bash
 ENV WORKON_HOME /app
 WORKDIR /app
 
+RUN pip install thumbor==7.0.0
 COPY requirements.txt /app/requirements.txt
-RUN pip install --trusted-host None --no-cache-dir \
-   -r /app/requirements.txt
+RUN pip install --trusted-host None --no-cache-dir -r /app/requirements.txt
+RUN pip install --no-dependencies tc-aws==6.2.15
+RUN pip install --no-dependencies tc-core==0.4.1
+RUN pip install --no-dependencies tc-shortener==0.2.2
 
 COPY conf/thumbor.conf.tpl /app/thumbor.conf.tpl
 
-ADD conf/circus.ini.tpl /etc/
-RUN mkdir  /etc/circus.d /etc/setup.d
-ADD conf/thumbor-circus.ini.tpl /etc/circus.d/
-
 ARG SIMD_LEVEL
-# workaround for https://github.com/python-pillow/Pillow/issues/3441
-# https://github.com/thumbor/thumbor/issues/1102
-RUN PILLOW_VERSION=$(python -c 'import PIL; print(PIL.__version__)') ; \
-    if [ -z "$SIMD_LEVEL" ]; then \
-      CC="cc" && PILLOW_PACKET="pillow" && PILLOW_VERSION_SUFFIX="" ;\
-    else \
-      CC="cc -m$SIMD_LEVEL" && PILLOW_PACKET="pillow-SIMD" && PILLOW_VERSION_SUFFIX=".post99" ;\
-      # hardcoding to overcome https://github.com/MinimalCompact/thumbor/pull/37#issuecomment-514771902
-      PILLOW_VERSION="5.2.0" ; \
-    fi ; \
 
-    pip uninstall -y pillow || true && \
-    CC=$CC \
-    # https://github.com/python-pillow/Pillow/pull/3241
-    LIB=/usr/lib/x86_64-linux-gnu/ \
-    # https://github.com/python-pillow/Pillow/pull/3237 or https://github.com/python-pillow/Pillow/pull/3245
-    INCLUDE=/usr/include/x86_64-linux-gnu/ \
-    pip install --no-cache-dir -U --force-reinstall --no-binary=:all: "${PILLOW_PACKET}<=${PILLOW_VERSION}${PILLOW_VERSION_SUFFIX}" \
-    # --global-option="build_ext" --global-option="--debug" \
-    --global-option="build_ext" --global-option="--enable-lcms" \
-    --global-option="build_ext" --global-option="--enable-zlib" \
-    --global-option="build_ext" --global-option="--enable-jpeg" \
-    --global-option="build_ext" --global-option="--enable-tiff"
+RUN PILLOW_VERSION=$(python -c 'import PIL; print(PIL.__version__)') ; \
+    if [ "$SIMD_LEVEL" ]; then \
+      pip uninstall -y pillow || true && \
+      CC="cc -m$SIMD_LEVEL" pip install --no-cache-dir -U --force-reinstall --no-binary=:all: "pillow-SIMD<=${PILLOW_VERSION}.post99" \
+      # --global-option="build_ext" --global-option="--debug" \
+      --global-option="build_ext" --global-option="--enable-lcms" \
+      --global-option="build_ext" --global-option="--enable-zlib" \
+      --global-option="build_ext" --global-option="--enable-jpeg" \
+      --global-option="build_ext" --global-option="--enable-tiff" ; \
+    fi ;
 
 COPY docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
-# running thumbor multiprocess via circus by default
-# to override and run thumbor solo, set THUMBOR_NUM_PROCESSES=1 or unset it
-CMD ["circus"]
+CMD ["thumbor", "--port=$THUMBOR_PORT", "-l ${LOG_LEVEL:-debug}", "--processes=${THUMBOR_NUM_PROCESSES:-1}"]
 
 EXPOSE 80 8888
