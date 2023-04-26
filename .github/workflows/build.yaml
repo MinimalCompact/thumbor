@@ -5,7 +5,7 @@ on:
 permissions:
   contents: read
 jobs:
-  thumbor:
+  thumbor-with-nginx-cache:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -21,7 +21,7 @@ jobs:
       - name: build thumbor image
         ## TODO set platform to linux/amd64,linux/arm64 once supported
         run: |
-          docker buildx build --platform "linux/amd64" \
+          docker buildx build --load --platform "linux/amd64" \
           -f thumbor/Dockerfile \
           --tag minimalcompact/thumbor:${{ steps.thumbor.outputs.VERSION }} \
           --tag minimalcompact/thumbor:latest \
@@ -29,7 +29,7 @@ jobs:
       - name: build nginx-proxy-cache image
         ## TODO set platform to linux/amd64,linux/arm64 once supported
         run: |
-          docker buildx build --platform=linux/amd64 --pull -f nginx-proxy-cache/Dockerfile \
+          docker buildx build --load --platform=linux/amd64 --pull -f nginx-proxy-cache/Dockerfile \
           --tag minimalcompact/thumbor-nginx-proxy-cache:${{ steps.thumbor.outputs.VERSION }} \
           --tag minimalcompact/thumbor-nginx-proxy-cache:latest \
           nginx-proxy-cache/
@@ -40,7 +40,6 @@ jobs:
           sudo ./install.sh /usr/local
       - name: run bats tests
         run: |
-          bats --tap tests/nginx-proxy-cache.bats
           for filename in tests/*.bats; do sudo bats --tap "$filename" || exit 1; done
   thumbor_simd:
     runs-on: ubuntu-latest
@@ -85,23 +84,3 @@ jobs:
           --tag  minimalcompact/remotecv:${{ steps.thumbor.outputs.VERSION }} \
           --tag minimalcompact/remotecv:latest \
           remotecv/
-  nginx_proxy_cache:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      - name: get thumbor version
-        id: thumbor
-        run: |
-          echo "VERSION=$(cat thumbor/requirements.txt| grep thumbor== | cut -d= -f 3)" >> $GITHUB_OUTPUT
-      - name: build image
-        ## TODO set platform to linux/amd64,linux/arm64 once supported
-        run: |
-          docker buildx build --platform=linux/amd64 --pull -f nginx-proxy-cache/Dockerfile \
-          --tag minimalcompact/thumbor-nginx-proxy-cache:${{ steps.thumbor.outputs.VERSION }} \
-          --tag minimalcompact/thumbor-nginx-proxy-cache:latest \
-          nginx-proxy-cache/
