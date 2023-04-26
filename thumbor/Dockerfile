@@ -32,9 +32,6 @@ WORKDIR /app
 
 COPY requirements.txt /app/requirements.txt
 RUN pip install --trusted-host None --no-cache-dir -r /app/requirements.txt
-RUN pip install --no-dependencies tc-aws==6.2.15
-RUN pip install --no-dependencies tc-core==0.4.1
-RUN pip install --no-dependencies tc-shortener==0.2.2
 
 COPY conf/thumbor.conf.tpl /app/thumbor.conf.tpl
 
