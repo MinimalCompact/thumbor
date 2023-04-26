@@ -23,8 +23,8 @@ load_thumbor () {
     export PROXY_CACHE_MEMORY_SIZE=10m
     load_thumbor
     docker-compose -f $BASE/docker-compose.yml ps
-    docker-compose -f $BASE/docker-compose.yml exec nginx-proxy bash -c 'cat /etc/nginx/conf.d/default.conf'
-    run bash -c "docker-compose -f $BASE/docker-compose.yml exec nginx-proxy bash -c 'cat /etc/nginx/conf.d/default.conf' | grep 'keys_zone=thumbor:10m inactive=24h max_size=20g'"
+    docker-compose -f $BASE/docker-compose.yml exec -T nginx-proxy bash -c 'cat /etc/nginx/conf.d/default.conf'
+    run bash -c "docker-compose -f $BASE/docker-compose.yml exec -T nginx-proxy bash -c 'cat /etc/nginx/conf.d/default.conf' | grep 'keys_zone=thumbor:10m inactive=24h max_size=20g'"
     [ $status -eq 0 ]
 }
 
