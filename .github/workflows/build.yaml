@@ -1,4 +1,4 @@
-name: Validate Build 
+name: Build and test
 on:
   pull_request:
   workflow_dispatch:
@@ -26,6 +26,13 @@ jobs:
           --tag minimalcompact/thumbor:${{ steps.thumbor.outputs.VERSION }} \
           --tag minimalcompact/thumbor:latest \
           thumbor/
+      - name: run bats tests
+        run: |
+          git clone https://github.com/bats-core/bats-core.git
+          cd bats-core
+          sudo ./install.sh /usr/local
+          cd ../thumbor/tests
+          for filename in *.bats; do sudo bats --tap "$filename" || exit 1; done
   thumbor_simd:
     runs-on: ubuntu-latest
     strategy:
