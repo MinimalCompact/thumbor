@@ -18,7 +18,7 @@ jobs:
         id: thumbor
         run: |
           echo "VERSION=$(cat thumbor/requirements.txt| grep thumbor== | cut -d= -f 3)" >> $GITHUB_OUTPUT
-      - name: build image
+      - name: build thumbor image
         ## TODO set platform to linux/amd64,linux/arm64 once supported
         run: |
           docker buildx build --platform "linux/amd64" \
@@ -26,6 +26,13 @@ jobs:
           --tag minimalcompact/thumbor:${{ steps.thumbor.outputs.VERSION }} \
           --tag minimalcompact/thumbor:latest \
           thumbor/
+      - name: build nginx-proxy-cache image
+        ## TODO set platform to linux/amd64,linux/arm64 once supported
+        run: |
+          docker buildx build --platform=linux/amd64 --pull -f nginx-proxy-cache/Dockerfile \
+          --tag minimalcompact/thumbor-nginx-proxy-cache:${{ steps.thumbor.outputs.VERSION }} \
+          --tag minimalcompact/thumbor-nginx-proxy-cache:latest \
+          nginx-proxy-cache/
       - name: install bats
         run: |
           git clone https://github.com/bats-core/bats-core.git
