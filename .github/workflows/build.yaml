@@ -26,13 +26,14 @@ jobs:
           --tag minimalcompact/thumbor:${{ steps.thumbor.outputs.VERSION }} \
           --tag minimalcompact/thumbor:latest \
           thumbor/
-      - name: run bats tests
+      - name: install bats
         run: |
           git clone https://github.com/bats-core/bats-core.git
           cd bats-core
           sudo ./install.sh /usr/local
-          cd ../thumbor/tests
-          for filename in *.bats; do sudo bats --tap "$filename" || exit 1; done
+      - name: run bats tests
+        run: |
+          for filename in tests/*.bats; do sudo bats --tap "$filename" || exit 1; done
   thumbor_simd:
     runs-on: ubuntu-latest
     strategy:
