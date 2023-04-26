@@ -5,7 +5,7 @@ on:
 permissions:
   contents: read
 jobs:
-  thumbor-with-nginx-cache:
+  thumbor:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -18,29 +18,19 @@ jobs:
         id: thumbor
         run: |
           echo "VERSION=$(cat thumbor/requirements.txt| grep thumbor== | cut -d= -f 3)" >> $GITHUB_OUTPUT
-      - name: build thumbor image
+      - name: build image
         ## TODO set platform to linux/amd64,linux/arm64 once supported
         run: |
-          docker buildx build --load --platform "linux/amd64" \
+          docker buildx build --platform "linux/amd64" \
+          -o type=docker,dest=/tmp/thumbor.tar \
           -f thumbor/Dockerfile \
           --tag minimalcompact/thumbor:${{ steps.thumbor.outputs.VERSION }} \
           --tag minimalcompact/thumbor:latest \
           thumbor/
-      - name: build nginx-proxy-cache image
-        ## TODO set platform to linux/amd64,linux/arm64 once supported
-        run: |
-          docker buildx build --load --platform=linux/amd64 --pull -f nginx-proxy-cache/Dockerfile \
-          --tag minimalcompact/thumbor-nginx-proxy-cache:${{ steps.thumbor.outputs.VERSION }} \
-          --tag minimalcompact/thumbor-nginx-proxy-cache:latest \
-          nginx-proxy-cache/
-      - name: install bats
-        run: |
-          git clone https://github.com/bats-core/bats-core.git
-          cd bats-core
-          sudo ./install.sh /usr/local
-      - name: run bats tests
-        run: |
-          for filename in tests/*.bats; do sudo bats --tap "$filename" || exit 1; done
+      - uses: actions/upload-artifact@v3
+        with:
+          name: images
+          path: /tmp/thumbor.tar
   thumbor_simd:
     runs-on: ubuntu-latest
     strategy:
@@ -61,10 +51,15 @@ jobs:
         ## TODO set platform to linux/amd64,linux/arm64 once supported
         run: |
           docker buildx build --platform "linux/amd64" --build-arg SIMD_LEVEL=${{ matrix.simd_level }}  \
+          -o type=docker,dest=/tmp/thumbor_simd_${{ matrix.simd_level }}.tar \
           -f thumbor/Dockerfile \
           --tag minimalcompact/thumbor:${{ steps.thumbor.outputs.VERSION }}-simd-${{ matrix.simd_level }} \
           --tag minimalcompact/thumbor:latest-simd-${{ matrix.simd_level }} \
           thumbor/
+      - uses: actions/upload-artifact@v3
+        with:
+          name: images
+          path: /tmp/thumbor${{ matrix.simd_level}}.tar
   remote_cv:
     runs-on: ubuntu-latest
     steps:
@@ -81,6 +76,60 @@ jobs:
       - name: build image
         run: |
           docker buildx build --platform=linux/amd64,linux/arm64 --build-arg THUMBOR_TAG=latest -f remotecv/Dockerfile \
+          -o type=docker,dest=/tmp/remote_cv.tar \
           --tag  minimalcompact/remotecv:${{ steps.thumbor.outputs.VERSION }} \
           --tag minimalcompact/remotecv:latest \
           remotecv/
+      - uses: actions/upload-artifact@v3
+        with:
+          name: images
+          path: /tmp/remote_cv.tar
+  nginx_proxy_cache:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: get thumbor version
+        id: thumbor
+        run: |
+          echo "VERSION=$(cat thumbor/requirements.txt| grep thumbor== | cut -d= -f 3)" >> $GITHUB_OUTPUT
+      - name: build image
+        ## TODO set platform to linux/amd64,linux/arm64 once supported
+        run: |
+          docker buildx build --platform=linux/amd64 --pull -f nginx-proxy-cache/Dockerfile \
+          -o type=docker,dest=/tmp/nginx_proxy_cache.tar \
+          --tag minimalcompact/thumbor-nginx-proxy-cache:${{ steps.thumbor.outputs.VERSION }} \
+          --tag minimalcompact/thumbor-nginx-proxy-cache:latest \
+          nginx-proxy-cache/
+      - uses: actions/upload-artifact@v3
+        with:
+          name: images
+          path: /tmp/nginx_proxy_cache.tar
+  test:
+    runs-on: ubuntu-latest
+    needs:
+      - thumbor
+      - nginx_proxy_cache
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: images
+          path: /tmp
+      - name: load images into docker
+        run: |
+          docker load --input /tmp/thumbor.tar
+          docker load --input /tmp/nginx_proxy_cache.tar
+          docker image ls -a
+      - name: install bats
+        run: |
+          git clone https://github.com/bats-core/bats-core.git
+          cd bats-core
+          sudo ./install.sh /usr/local
+      - name: run bats tests
+        run: |
+          for filename in tests/*.bats; do sudo bats --tap "$filename" || exit 1; done
