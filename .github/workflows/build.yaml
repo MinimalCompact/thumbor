@@ -40,6 +40,7 @@ jobs:
           sudo ./install.sh /usr/local
       - name: run bats tests
         run: |
+          bats --tap tests/nginx-proxy-cache.bats
           for filename in tests/*.bats; do sudo bats --tap "$filename" || exit 1; done
   thumbor_simd:
     runs-on: ubuntu-latest
