@@ -1,8 +1,7 @@
-FROM python:3.9
+FROM python:3.9 as base
 
 LABEL maintainer="MinimalCompact"
-
-VOLUME /data
+LABEL org.opencontainers.image.source=https://github.com/MinimalCompact/thumbor
 
 # base OS packages
 RUN  \
@@ -25,32 +24,44 @@ RUN  \
         ffmpeg && \
     apt-get clean
 
+FROM base as thumbor
+
 ENV HOME /app
 ENV SHELL bash
 ENV WORKON_HOME /app
 WORKDIR /app
 
-COPY requirements.txt /app/requirements.txt
+COPY thumbor/requirements.txt /app/requirements.txt
 RUN pip install --trusted-host None --no-cache-dir -r /app/requirements.txt
 
-COPY conf/thumbor.conf.tpl /app/thumbor.conf.tpl
+COPY thumbor/conf/thumbor.conf.tpl /app/thumbor.conf.tpl
+COPY thumbor/docker-entrypoint.sh /
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["thumbor", "--port=$THUMBOR_PORT", "-l ${LOG_LEVEL:-debug}", "--processes=${THUMBOR_NUM_PROCESSES:-1}"]
+VOLUME /data
+EXPOSE 80 8888
+
+FROM thumbor as pillow_simd
 
 ARG SIMD_LEVEL
 
+RUN test -n "$SIMD_LEVEL"
 RUN PILLOW_VERSION=$(python -c 'import PIL; print(PIL.__version__)') ; \
-    if [ "$SIMD_LEVEL" ]; then \
-      pip uninstall -y pillow || true && \
-      CC="cc -m$SIMD_LEVEL" pip install --no-cache-dir -U --force-reinstall --no-binary=:all: "pillow-SIMD<=${PILLOW_VERSION}.post99" \
-      # --global-option="build_ext" --global-option="--debug" \
-      --global-option="build_ext" --global-option="--enable-lcms" \
-      --global-option="build_ext" --global-option="--enable-zlib" \
-      --global-option="build_ext" --global-option="--enable-jpeg" \
-      --global-option="build_ext" --global-option="--enable-tiff" ; \
-    fi ;
+    pip uninstall -y pillow || true && \
+    CC="cc -m$SIMD_LEVEL" pip install --no-cache-dir -U --force-reinstall --no-binary=:all: "pillow-SIMD<=${PILLOW_VERSION}.post99" \
+    # --global-option="build_ext" --global-option="--debug" \
+    --global-option="build_ext" --global-option="--enable-lcms" \
+    --global-option="build_ext" --global-option="--enable-zlib" \
+    --global-option="build_ext" --global-option="--enable-jpeg" \
+    --global-option="build_ext" --global-option="--enable-tiff"
 
-COPY docker-entrypoint.sh /
+FROM thumbor as remotecv
+
+COPY remotecv/requirements.txt /app/requirements.txt
+RUN pip install --trusted-host None --no-cache-dir \
+   -r /app/requirements.txt
+
+COPY remotecv/docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["remotecv"]
 
-CMD ["thumbor", "--port=$THUMBOR_PORT", "-l ${LOG_LEVEL:-debug}", "--processes=${THUMBOR_NUM_PROCESSES:-1}"]
-
-EXPOSE 80 8888
