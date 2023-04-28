@@ -35,6 +35,9 @@ done
 EXTRA_ARGUMENTS="${EXTRA_ARGUMENTS} --platform $PLATFORM"
 THUMBOR_VERSION=$(cat thumbor/requirements.txt| grep thumbor== | cut -d= -f 3)
 
+echo "Branch: ${BRANCH} | Thumbor version: ${THUMBOR_VERSION}"
+echo "*******************************************************"
+
 echo "--> BUILDING minimalcompact/thumbor"
 [ "$BRANCH" == "master" ] && EXTRA_TAG="--tag minimalcompact/thumbor:latest"
 docker buildx build $EXTRA_ARGUMENTS --pull -f thumbor/Dockerfile \
