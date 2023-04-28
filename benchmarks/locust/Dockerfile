@@ -1,6 +1,6 @@
-FROM python:3.6
+FROM python:3.9
 
-RUN python3.6 -m pip install locustio==0.11.0
+RUN python3.9 -m pip install locustio==0.14.5
 
 EXPOSE 8089
 EXPOSE 5557
