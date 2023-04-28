@@ -61,7 +61,8 @@ docker buildx build $EXTRA_ARGUMENTS --platform linux/amd64 --build-arg SIMD_LEV
 
 echo "--> BUILDING minimalcompact/thumbor:simd-avx2"
 [ "$BRANCH" == "master" ] && EXTRA_TAG="--tag ghcr.io/minimalcompact/thumbor:latest-simd-avx2"
-docker buildx build $EXTRA_ARGUMENTS --platform $PLATFORM --build-arg SIMD_LEVEL=avx2  -f thumbor/Dockerfile \
+## AVX2 Doesnt support multi arch
+docker buildx build $EXTRA_ARGUMENTS --platform linux/amd64 --build-arg SIMD_LEVEL=avx2  -f thumbor/Dockerfile \
  --tag ghcr.io/minimalcompact/thumbor:$THUMBOR_VERSION-simd-avx2 \
  $EXTRA_TAG \
  thumbor/
