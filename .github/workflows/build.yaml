@@ -30,6 +30,11 @@ jobs:
         run: |
           for filename in tests/*.bats; do sudo bats --tap "$filename" || exit 1; done
       - name: push thubmor-7
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
         # TODO: temporarily pushing thumbor-7
         if: github.head_ref == 'thumbor-7'
         # TODO: add registry credentials
