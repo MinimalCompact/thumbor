@@ -38,6 +38,13 @@ THUMBOR_VERSION=$(cat thumbor/requirements.txt| grep thumbor== | cut -d= -f 3)
 echo "Branch: ${BRANCH} | Thumbor version: ${THUMBOR_VERSION}"
 echo "*******************************************************"
 
+echo "--> BUILDING minimalcompact/thumbor-nginx-proxy-cache"
+[ "$BRANCH" == "master" ] && EXTRA_TAG="--tag ghcr.io/minimalcompact/thumbor-nginx-proxy-cache:latest"
+docker buildx build $EXTRA_ARGUMENTS --pull -f nginx-proxy-cache/Dockerfile \
+ --tag ghcr.io/minimalcompact/thumbor-nginx-proxy-cache:$THUMBOR_VERSION \
+ $EXTRA_TAG \
+ nginx-proxy-cache/
+
 echo "--> BUILDING minimalcompact/thumbor"
 [ "$BRANCH" == "master" ] && EXTRA_TAG="--tag ghcr.io/minimalcompact/thumbor:latest"
 docker buildx build $EXTRA_ARGUMENTS --pull -f thumbor/Dockerfile \
@@ -52,21 +59,12 @@ docker buildx build $EXTRA_ARGUMENTS --build-arg SIMD_LEVEL=sse4 -f thumbor/Dock
  $EXTRA_TAG \
  thumbor/
 
-
 echo "--> BUILDING minimalcompact/thumbor:simd-avx2"
 [ "$BRANCH" == "master" ] && EXTRA_TAG="--tag ghcr.io/minimalcompact/thumbor:latest-simd-avx2"
 docker buildx build $EXTRA_ARGUMENTS --build-arg SIMD_LEVEL=avx2  -f thumbor/Dockerfile \
  --tag ghcr.io/minimalcompact/thumbor:$THUMBOR_VERSION-simd-avx2 \
  $EXTRA_TAG \
  thumbor/
-
-echo "--> BUILDING minimalcompact/thumbor-nginx-proxy-cache"
-[ "$BRANCH" == "master" ] && EXTRA_TAG="--tag ghcr.io/minimalcompact/thumbor-nginx-proxy-cache:latest"
-docker buildx build $EXTRA_ARGUMENTS --pull -f nginx-proxy-cache/Dockerfile \
- --tag ghcr.io/minimalcompact/thumbor-nginx-proxy-cache:$THUMBOR_VERSION \
- $EXTRA_TAG \
- nginx-proxy-cache/
-
 
 echo "--> BUILDING minimalcompact/remotecv"
 [ "$BRANCH" == "master" ] && EXTRA_TAG="--tag ghcr.io/minimalcompact/remotecv:latest"

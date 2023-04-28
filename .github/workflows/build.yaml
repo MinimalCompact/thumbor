@@ -19,7 +19,7 @@ jobs:
         with:
           registry: ghcr.io
           username: minimalcompact
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.GH_TOKEN }}
       - name: get thumbor version
         id: thumbor
         run: |
