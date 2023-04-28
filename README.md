@@ -12,18 +12,20 @@ Key Features and Goals:
 * SIMD support via docker tags
 * remotecv docker image (for async smart cropping and feature detection)
 * Clear version tagging to match Thumbor versions
+* NOTE: from Thumbor 7.x images are no longer updated on docker hub and were moved to **ghcr.io**
+        `latest` will be deleted from docker hub eventually
 
 ## Quick Start
 
 ```
-$ docker run -p 80:80 minimalcompact/thumbor
+$ docker run -p 80:80 ghcr.io/minimalcompact/thumbor
 $ wget http://localhost/unsafe/500x150/i.imgur.com/Nfn80ck.png
 ```
 
 multi-process
 
 ```
-$ docker run -p 80:80 -e THUMBOR_NUM_PROCESSES=8 minimalcompact/thumbor
+$ docker run -p 80:80 -e THUMBOR_NUM_PROCESSES=8 ghcr.io/minimalcompact/thumbor
 $ wget http://localhost/unsafe/500x150/i.imgur.com/Nfn80ck.png
 
 ```
