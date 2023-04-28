@@ -34,9 +34,9 @@ jobs:
         if: github.head_ref == 'thumbor-7'
         # TODO: add registry credentials
         run: |
-          ./build --multiarch --push --branch "${GITHUB_REF_NAME}"
+          ./build --multiarch --push --branch thumbor-7
       - name: push when merged to master
         if: github.event.pull_request.merged == true && github.ref == 'refs/heads/master'
         # TODO: add registry credentials
         run: |
-          ./build --multiarch --push --branch "${GITHUB_REF_NAME}"
+          ./build --multiarch --push --branch master
