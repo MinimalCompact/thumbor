@@ -24,6 +24,12 @@ jobs:
         id: thumbor
         run: |
           echo "VERSION=$(cat thumbor/requirements.txt| grep thumbor== | cut -d= -f 3)" >> $GITHUB_OUTPUT
+      - name: push thubmor-7-temp
+        # TODO: temporarily pushing thumbor-7
+        if: github.head_ref == 'thumbor-7'
+        # TODO: add registry credentials
+        run: |
+          ./build --extra "--cache-from=type=gha" --push --branch thumbor-7
       - name: build images and load them for testing
         run: |
           ./build --extra "--load --cache-to=type=gha" --branch "${GITHUB_REF_NAME}"
