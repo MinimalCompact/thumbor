@@ -1,7 +1,7 @@
 version: '3'
 services:
   thumbor:
-    image: minimalcompact/thumbor
+    image: ghcr.io/minimalcompact/thumbor
     environment:
       # VIRTUAL_HOST is picked up by nginx-proxy. Here it's set for localhost
       # but you usually need to point it to your domain, e.g. thumbor.example.com
@@ -24,7 +24,7 @@ services:
     networks:
       - app
   nginx-proxy:
-    image: minimalcompact/thumbor-nginx-proxy-cache
+    image: ghcr.io/minimalcompact/thumbor-nginx-proxy-cache
     environment:
       # setting the DEFAULT_HOST to the same as the VIRTUAL_HOST above.
       # Makes sure it works irrespective of the host name
@@ -37,7 +37,7 @@ services:
       - PROXY_CACHE_INACTIVE=300m
     volumes:
       # this is essential for nginx-proxy to detect docker containers, scaling etc
-      # see https://github.com/jwilder/nginx-proxy
+      # see https://github.com/nginx-proxy/nginx-proxy
       - /var/run/docker.sock:/tmp/docker.sock:ro
       # mapping cache folder, to persist it independently of the container
       - ./cache:/var/cache/nginx
