@@ -1,4 +1,4 @@
-name: Build and test
+name: Build test and push
 on:
   pull_request:
   workflow_dispatch:
@@ -31,7 +31,7 @@ jobs:
           for filename in tests/*.bats; do sudo bats --tap "$filename" || exit 1; done
       - name: push thubmor-7
         # TODO: temporarily pushing thumbor-7
-        if: github.ref == 'refs/heads/thumbor-7'
+        if: github.head_ref == 'thumbor-7'
         # TODO: add registry credentials
         run: |
           ./build --multiarch --push --branch "${GITHUB_REF_NAME}"
