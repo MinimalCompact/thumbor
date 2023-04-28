@@ -2,7 +2,6 @@ name: Build and test
 on:
   pull_request:
   workflow_dispatch:
-  push:
 permissions:
   contents: read
 jobs:
@@ -32,7 +31,7 @@ jobs:
           for filename in tests/*.bats; do sudo bats --tap "$filename" || exit 1; done
       - name: push
         # TODO: temporarily pushing thumbor-7
-        if: {{ github.ref == 'refs/heads/thumbor-7' || (github.event.pull_request.merged == true && github.ref == 'refs/heads/master') }}
+        if: github.ref == 'refs/heads/thumbor-7' || (github.event.pull_request.merged == true && github.ref == 'refs/heads/master')
         # TODO: add registry credentials
         run: |
           ./build --multiarch --push --branch "${GITHUB_REF_NAME}"
