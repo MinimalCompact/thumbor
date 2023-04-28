@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  packages: write
 jobs:
   build-test-push:
     runs-on: ubuntu-latest
@@ -19,7 +20,7 @@ jobs:
         with:
           registry: ghcr.io
           username: minimalcompact
-          password: ${{ secrets.GH_TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: get thumbor version
         id: thumbor
         run: |
