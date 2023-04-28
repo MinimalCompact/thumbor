@@ -39,7 +39,7 @@ echo "*******************************************************"
 
 echo "--> BUILDING minimalcompact/thumbor-nginx-proxy-cache"
 [ "$BRANCH" == "master" ] && EXTRA_TAG="--tag ghcr.io/minimalcompact/thumbor-nginx-proxy-cache:latest"
-docker buildx build $EXTRA_ARGUMENTS --plat--pull -f nginx-proxy-cache/Dockerfile \
+docker buildx build $EXTRA_ARGUMENTS --platform $PLATFORM  --pull -f nginx-proxy-cache/Dockerfile \
  --tag ghcr.io/minimalcompact/thumbor-nginx-proxy-cache:$THUMBOR_VERSION \
  $EXTRA_TAG \
  nginx-proxy-cache/
