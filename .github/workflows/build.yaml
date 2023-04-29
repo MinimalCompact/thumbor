@@ -33,6 +33,7 @@ jobs:
           timeout_minutes: 10
           max_attempts: 3
           command: |
+            docker image ls -a
             for filename in tests/*.bats; do sudo bats --tap "$filename" || exit 1; done
       - name: login to ghcr.io
         if: github.head_ref == 'thumbor-7' || github.ref == 'refs/heads/master'
