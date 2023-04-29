@@ -19,14 +19,14 @@ Key Features and Goals:
 
 ```
 $ docker run -p 80:80 ghcr.io/minimalcompact/thumbor
-$ wget http://localhost/unsafe/500x150/i.imgur.com/Nfn80ck.png
+$ wget http://localhost/unsafe/500x150/iili.io/H8m6pHv.png
 ```
 
 multi-process
 
 ```
 $ docker run -p 80:80 -e THUMBOR_NUM_PROCESSES=8 ghcr.io/minimalcompact/thumbor
-$ wget http://localhost/unsafe/500x150/i.imgur.com/Nfn80ck.png
+$ wget http://localhost/unsafe/500x150/iili.io/H8m6pHv.png
 
 ```
 
