@@ -8,5 +8,5 @@ copy_env = True
 autostart = True
 
 [socket:thumbor]
-host = 0.0.0.0
+host = {{ THUMBOR_HOST | default('0.0.0.0') }}
 port = {{ THUMBOR_PORT | default(80) }}
