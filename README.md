@@ -8,23 +8,25 @@ Key Features and Goals:
 
 * The latest version of thumbor and dependencies, in a docker image
 * Supports both solo thumbor and multiprocess in one image
-* [Nginx frontend docker image with built-in caching](nginx-proxy-cache/README.md), using [nginx-proxy](https://github.com/jwilder/nginx-proxy)
+* [Nginx frontend docker image with built-in caching](nginx-proxy-cache/README.md), using [nginx-proxy](https://github.com/nginx-proxy/nginx-proxy)
 * SIMD support via docker tags
 * remotecv docker image (for async smart cropping and feature detection)
 * Clear version tagging to match Thumbor versions
+* NOTE: from Thumbor 7.x images are no longer updated on docker hub and were moved to **ghcr.io**
+        `latest` will be deleted from docker hub eventually
 
 ## Quick Start
 
 ```
-$ docker run -p 80:80 minimalcompact/thumbor
-$ wget http://localhost/unsafe/500x150/i.imgur.com/Nfn80ck.png
+$ docker run -p 80:80 ghcr.io/minimalcompact/thumbor
+$ wget http://localhost/unsafe/500x150/iili.io/H8m6pHv.png
 ```
 
 multi-process
 
 ```
-$ docker run -p 80:80 -e THUMBOR_NUM_PROCESSES=8 minimalcompact/thumbor
-$ wget http://localhost/unsafe/500x150/i.imgur.com/Nfn80ck.png
+$ docker run -p 80:80 -e THUMBOR_NUM_PROCESSES=8 ghcr.io/minimalcompact/thumbor
+$ wget http://localhost/unsafe/500x150/iili.io/H8m6pHv.png
 
 ```
 
