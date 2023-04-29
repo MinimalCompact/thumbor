@@ -1,5 +1,5 @@
 ARG THUMBOR_TAG=latest
-FROM minimalcompact/thumbor:$THUMBOR_TAG
+FROM ghcr.io/minimalcompact/thumbor:$THUMBOR_TAG
 
 LABEL maintainer="MinimalCompact"
 
