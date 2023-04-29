@@ -42,7 +42,7 @@ jobs:
           registry: ghcr.io
           username: minimalcompact
           password: ${{ secrets.GH_TOKEN }}
-      - name: push thubmor-7
+      - name: push thumbor-7
         # TODO: temporarily pushing thumbor-7
         if: github.head_ref == 'thumbor-7'
         # TODO: add registry credentials
