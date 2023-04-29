@@ -75,3 +75,7 @@ docker buildx build --platform=linux/amd64,linux/arm64 --build-arg THUMBOR_TAG=l
  --tag ghcr.io/minimalcompact/remotecv:$THUMBOR_VERSION \
  $EXTRA_TAG \
  remotecv/
+
+echo "*******************************************************"
+echo Docker images:
+docker image ls -a
