@@ -12,6 +12,11 @@ if [ -n "$LOG_LEVEL" ]; then
     LOG_PARAMETER="-l $LOG_LEVEL"
 fi
 
+# Check if thumbor host address is defined -> (default host 0.0.0.0)
+if [ -z ${THUMBOR_HOST+x} ]; then
+    THUMBOR_HOST='0.0.0.0'
+fi
+
 # Check if thumbor port is defined -> (default port 80)
 if [ -z ${THUMBOR_PORT+x} ]; then
     THUMBOR_PORT=80
@@ -19,7 +24,7 @@ fi
 
 if [ "$1" = 'thumbor' ]; then
     echo "---> Starting thumbor with ${THUMBOR_NUM_PROCESSES:-1} processes..."
-    exec thumbor --port=$THUMBOR_PORT --conf=/app/thumbor.conf $LOG_PARAMETER --processes=${THUMBOR_NUM_PROCESSES:-1}
+    exec thumbor --ip=$THUMBOR_HOST --port=$THUMBOR_PORT --conf=/app/thumbor.conf $LOG_PARAMETER --processes=${THUMBOR_NUM_PROCESSES:-1}
 fi
 
 exec "$@"
