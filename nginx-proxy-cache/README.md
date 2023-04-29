@@ -1,10 +1,10 @@
 # Minimal Compact thumbor nginx proxy cache
 
-A caching proxy for thumbor based on [nginx-proxy](https://github.com/jwilder/nginx-proxy)
+A caching proxy for thumbor based on [nginx-proxy](https://github.com/nginx-proxy/nginx-proxy)
 
 ## Basics
 
-[nginx-proxy](https://github.com/jwilder/nginx-proxy) provides a way to dynamically attach docker images and get them proxied by Nginx.
+[nginx-proxy](https://github.com/nginx-proxy/nginx-proxy) provides a way to dynamically attach docker images and get them proxied by Nginx.
 
 This image adds a proxy caching layer into `nginx-proxy`, using the built-in `proxy_cache` directive.
 

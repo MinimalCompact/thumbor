@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: thumbor
-        image: minimalcompact/thumbor:latest
+        image: ghcr.io/minimalcompact/thumbor:latest
         ports:
         - containerPort: 80
         env:
