@@ -1,0 +1,53 @@
+name: Build test and push
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+  packages: write
+jobs:
+  build-test-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: login to ghcr.io
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: minimalcompact
+          password: ${{ secrets.GH_TOKEN }}
+      - name: get thumbor version
+        id: thumbor
+        run: |
+          echo "VERSION=$(cat thumbor/requirements.txt| grep thumbor== | cut -d= -f 3)" >> $GITHUB_OUTPUT
+      - name: build images and load them for testing
+        run: |
+          ./build --extra "--load --cache-to=type=gha" --branch "${GITHUB_REF_NAME}"
+      - name: install bats
+        run: |
+          git clone https://github.com/bats-core/bats-core.git
+          cd bats-core
+          sudo ./install.sh /usr/local
+      - name: run bats tests
+        uses: nick-fields/retry@v2
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          command: |
+            for filename in tests/*.bats; do sudo bats --tap "$filename" || exit 1; done
+      - name: push thubmor-7
+        # TODO: temporarily pushing thumbor-7
+        if: github.head_ref == 'thumbor-7'
+        # TODO: add registry credentials
+        run: |
+          ./build --extra "--cache-from=type=gha" --multiarch --push --branch thumbor-7
+      - name: push when merged to master
+        if: github.event.pull_request.merged == true && github.ref == 'refs/heads/master'
+        # TODO: add registry credentials
+        run: |
+          ./build --multiarch --push --branch master

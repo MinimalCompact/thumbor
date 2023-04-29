@@ -27,7 +27,7 @@ spec:
       terminationGracePeriodSeconds: 1
       containers:
       - name: thumbor
-        image: minimalcompact/thumbor:latest
+        image: ghcr.io/minimalcompact/thumbor:latest
         ports:
         - containerPort: 80
           name: http
