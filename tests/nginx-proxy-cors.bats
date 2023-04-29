@@ -13,13 +13,13 @@ load_thumbor () {
 
 @test "no CORS headers by default" {
     load_thumbor
-    run bash -c "curl -sSL -D - http://localhost:8888/unsafe/500x150/i.imgur.com/Nfn80ck.png -o /dev/null |grep 'Access-Control-Allow-Origin'"
+    run bash -c "curl -sSL -D - http://localhost:8888/unsafe/500x150/iili.io/H8m6pHv.png -o /dev/null |grep 'Access-Control-Allow-Origin'"
     [ $status -eq 1 ]
 }
 
 @test "CORS headers based on CORS_ALLOW_ORIGIN value" {
     export CORS_ALLOW_ORIGIN=http://www.xyz
     load_thumbor
-    run bash -c "curl -sSL -D - http://localhost:8888/unsafe/500x150/i.imgur.com/Nfn80ck.png -o /dev/null |grep 'Access-Control-Allow-Origin: http://www.xyz'"
+    run bash -c "curl -sSL -D - http://localhost:8888/unsafe/500x150/iili.io/H8m6pHv.png -o /dev/null |grep 'Access-Control-Allow-Origin: http://www.xyz'"
     [ $status -eq 0 ]
 }
