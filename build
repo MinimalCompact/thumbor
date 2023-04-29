@@ -56,7 +56,7 @@ docker buildx build $EXTRA_ARGUMENTS --platform $PLATFORM --pull -f thumbor/Dock
 echo "--> BUILDING minimalcompact/thumbor:simd-sse4"
 [ "$BRANCH" == "master" ] && EXTRA_TAG="--tag ghcr.io/minimalcompact/thumbor:latest-simd-sse4t"
 ## SSE doesnt support multi arch
-docker buildx build $EXTRA_ARGUMENTS --platform linux/amd64 --build-arg SIMD_LEVEL=sse4 -f thumbor/Dockerfile \
+docker buildx build $EXTRA_ARGUMENTS --platform linux/amd64 --build-arg SIMD_LEVEL=sse4 --pull -f thumbor/Dockerfile \
  --tag ghcr.io/minimalcompact/thumbor:$THUMBOR_VERSION-simd-sse4 \
  $EXTRA_TAG \
  thumbor/
@@ -64,14 +64,14 @@ docker buildx build $EXTRA_ARGUMENTS --platform linux/amd64 --build-arg SIMD_LEV
 echo "--> BUILDING minimalcompact/thumbor:simd-avx2"
 [ "$BRANCH" == "master" ] && EXTRA_TAG="--tag ghcr.io/minimalcompact/thumbor:latest-simd-avx2"
 ## AVX2 Doesnt support multi arch
-docker buildx build $EXTRA_ARGUMENTS --platform linux/amd64 --build-arg SIMD_LEVEL=avx2  -f thumbor/Dockerfile \
+docker buildx build $EXTRA_ARGUMENTS --platform linux/amd64 --build-arg SIMD_LEVEL=avx2 --pull -f thumbor/Dockerfile \
  --tag ghcr.io/minimalcompact/thumbor:$THUMBOR_VERSION-simd-avx2 \
  $EXTRA_TAG \
  thumbor/
 
 echo "--> BUILDING minimalcompact/remotecv"
 [ "$BRANCH" == "master" ] && EXTRA_TAG="--tag ghcr.io/minimalcompact/remotecv:latest"
-docker buildx build --platform=linux/amd64,linux/arm64 --build-arg THUMBOR_TAG=$THUMBOR_VERSION -f remotecv/Dockerfile \
+docker buildx build --platform $PLATFORM --build-arg THUMBOR_TAG=$THUMBOR_VERSION --pull -f remotecv/Dockerfile \
  --tag ghcr.io/minimalcompact/remotecv:$THUMBOR_VERSION \
  $EXTRA_TAG \
  remotecv/
