@@ -32,9 +32,9 @@ load_thumbor () {
     load_thumbor
     sudo rm -rf $BASE/data/*
     # original (un-cached request)
-    run bash -c "curl -H -sSL -D - http://localhost:8888/unsafe/500x150/i.imgur.com/Nfn80ck.png -o /dev/null |grep 'Cache-Control: max-age=123456789,public'"
+    run bash -c "curl -H -sSL -D - http://localhost:8888/unsafe/500x150/iili.io/H8m6pHv.png -o /dev/null |grep 'Cache-Control: max-age=123456789,public'"
     [ $status -eq 0 ]
     # cached request
-    run bash -c "curl -H -sSL -D - http://localhost:8888/unsafe/500x150/i.imgur.com/Nfn80ck.png -o /dev/null |grep 'Cache-Control: max-age=123456789,public'"
+    run bash -c "curl -H -sSL -D - http://localhost:8888/unsafe/500x150/iili.io/H8m6pHv.png -o /dev/null |grep 'Cache-Control: max-age=123456789,public'"
     [ $status -eq 0 ]
 }
