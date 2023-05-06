@@ -48,4 +48,4 @@ jobs:
       - name: push when master
         if: github.ref == 'refs/heads/master'
         run: |
-          ./build --extra="--cache-from=type=gha,scope=build" --multiarch --push --branch master
+          ./build --extra "--cache-from=type=gha,scope=build" --multiarch --push --branch master
