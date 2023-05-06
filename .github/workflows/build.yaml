@@ -42,14 +42,7 @@ jobs:
           registry: ghcr.io
           username: minimalcompact
           password: ${{ secrets.GH_TOKEN }}
-      - name: push thumbor-7
-        # TODO: temporarily pushing thumbor-7
-        if: github.head_ref == 'thumbor-7'
-        # TODO: add registry credentials
-        run: |
-          ./build --extra "--cache-from=type=gha --cache-to=type=gha" --multiarch --push --branch thumbor-7
       - name: push when master
         if: github.ref == 'refs/heads/master'
-        # TODO: add registry credentials
         run: |
           ./build --multiarch --push --branch master

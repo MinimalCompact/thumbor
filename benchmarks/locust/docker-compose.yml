@@ -1,7 +1,7 @@
 version: "3"
 services:
   thumbor:
-    image: minimalcompact/thumbor:7
+    image: ghcr.io/minimalcompact/thumbor
     environment:
       # we can control the number of processes and threads via ENV
       - THUMBOR_NUM_PROCESSES=${THUMBOR_NUM_PROCESSES:-1}
