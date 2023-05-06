@@ -18,44 +18,44 @@ teardown () {
 }
 
 @test "PNG returns an image/png content-type" {
-    curl -sSL -D - http://localhost:8888/unsafe/500x150/i.imgur.com/Nfn80ck.png -o /dev/null |grep 'Content-Type: image/png'
+    curl -sSL -D - http://localhost:8888/unsafe/500x150/iili.io/H8m6pHv.png -o /dev/null |grep 'Content-Type: image/png'
 }
 
 @test "PNG result is cached" {
-    ls $BASE/data/d/a9/ad4b1bf58341edd5c957cf0aa94eba9d
-    curl -sSL -D - http://localhost:8888/unsafe/500x150/i.imgur.com/Nfn80ck.png -o /dev/null |grep 'Content-Type: image/png'
+    ls $BASE/data/1/93/d2f8049ecceae339b0576ce9fee79931
+    curl -sSL -D - http://localhost:8888/unsafe/500x150/iili.io/H8m6pHv.png -o /dev/null |grep 'Content-Type: image/png'
 }
 
 @test "AUTO_WEBP returns an image/webp image" {
-    curl -H 'Accept: image/webp' -sSL -D - http://localhost:8888/unsafe/500x150/i.imgur.com/Nfn80ck.png -o /dev/null |grep 'Content-Type: image/webp'
+    curl -H 'Accept: image/webp' -sSL -D - http://localhost:8888/unsafe/500x150/iili.io/H8m6pHv.png -o /dev/null |grep 'Content-Type: image/webp'
 }
 
 @test "AUTO_WEBP result is cached" {
-    ls $BASE/data/6/fd/9d408b450fecb47d2a5370cfbbeccfd6
-    curl -H 'Accept: image/webp' -sSL -D - http://localhost:8888/unsafe/500x150/i.imgur.com/Nfn80ck.png -o /dev/null |grep 'Content-Type: image/webp'
+    ls $BASE/data/f/8e/83d9248ee51a85082f1f6b95085ed8ef
+    curl -H 'Accept: image/webp' -sSL -D - http://localhost:8888/unsafe/500x150/iili.io/H8m6pHv.png -o /dev/null |grep 'Content-Type: image/webp'
 }
 
 @test "filters:format(jpeg) returns an image/jpeg content-type" {
-    rm -f $BASE/data/b/71/72931161fa8b05e9cf6ca882e1bc771b
-    curl -sSL -D - 'http://localhost:8888/unsafe/500x150/filters:format(jpeg)/i.imgur.com/Nfn80ck.png' -o /dev/null |grep 'Content-Type: image/jpeg'
+    rm -f $BASE/data/c/ab/107f801b5c03c0acc27deb34fa98eabc
+    curl -sSL -D - 'http://localhost:8888/unsafe/500x150/filters:format(jpeg)/iili.io/H8m6pHv.png' -o /dev/null |grep 'Content-Type: image/jpeg'
 }
 
 @test "filters:format(jpeg) result is cached" {
-    ls $BASE/data/b/71/72931161fa8b05e9cf6ca882e1bc771b
-    curl -sSL -D - 'http://localhost:8888/unsafe/500x150/filters:format(jpeg)/i.imgur.com/Nfn80ck.png' -o /dev/null |grep 'Content-Type: image/jpeg'
+    ls $BASE/data/c/ab/107f801b5c03c0acc27deb34fa98eabc
+    curl -sSL -D - 'http://localhost:8888/unsafe/500x150/filters:format(jpeg)/iili.io/H8m6pHv.png' -o /dev/null |grep 'Content-Type: image/jpeg'
 }
 
 @test "filters:format(webp) returns an image/webp content-type" {
-    rm -f $BASE/data/b/71/72931161fa8b05e9cf6ca882e1bc771b
-    curl -sSL -D - 'http://localhost:8888/unsafe/500x150/filters:format(webp)/i.imgur.com/Nfn80ck.png' -o /dev/null |grep 'Content-Type: image/webp'
+    rm -f $BASE/data/c/ab/107f801b5c03c0acc27deb34fa98eabc
+    curl -sSL -D - 'http://localhost:8888/unsafe/500x150/filters:format(webp)/iili.io/H8m6pHv.png' -o /dev/null |grep 'Content-Type: image/webp'
 }
 
 @test "filters:format(webp) result is cached" {
-    ls $BASE/data/4/c7/2b3b73bd53c5d7e35f17b6d358ecbc74
-    curl -sSL -D - 'http://localhost:8888/unsafe/500x150/filters:format(webp)/i.imgur.com/Nfn80ck.png' -o /dev/null |grep 'Content-Type: image/webp'
+    ls $BASE/data/9/fb/ff2896a24893ab6e2d0d1c8195f5bfb9
+    curl -sSL -D - 'http://localhost:8888/unsafe/500x150/filters:format(webp)/iili.io/H8m6pHv.png' -o /dev/null |grep 'Content-Type: image/webp'
 }
 
 @test "only one content-type header is present" {
-    count=`curl -H 'Accept: image/webp' -sSL -D - http://localhost:8888/unsafe/500x150/i.imgur.com/Nfn80ck.png -o /dev/null |grep 'Content-Type:'|wc -l`
+    count=`curl -H 'Accept: image/webp' -sSL -D - http://localhost:8888/unsafe/500x150/iili.io/H8m6pHv.png -o /dev/null |grep 'Content-Type:'|wc -l`
     [ $count -eq 1 ]
 }
