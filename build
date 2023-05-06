@@ -34,7 +34,8 @@ done
 
 THUMBOR_VERSION=$(cat thumbor/requirements.txt| grep thumbor== | cut -d= -f 3)
 
-echo "Branch: ${BRANCH} | Thumbor version: ${THUMBOR_VERSION}"
+docker buildx version
+echo "Branch: ${BRANCH} | Thumbor version: ${THUMBOR_VERSION} | Platform: ${PLATFORM} | Extra Arguments: ${EXTRA_ARGUMENTS}"
 echo "*******************************************************"
 
 echo "--> BUILDING minimalcompact/thumbor-nginx-proxy-cache"
