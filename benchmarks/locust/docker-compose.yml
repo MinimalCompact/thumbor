@@ -1,11 +1,10 @@
 version: "3"
 services:
   thumbor:
-    image: minimalcompact/thumbor
+    image: ghcr.io/minimalcompact/thumbor
     environment:
       # we can control the number of processes and threads via ENV
       - THUMBOR_NUM_PROCESSES=${THUMBOR_NUM_PROCESSES:-1}
-      - ENGINE_THREADPOOL_SIZE=${ENGINE_THREADPOOL_SIZE:-0}
       # this would allow CORS from any origin (you can restrict to specific origins if you want)
       - CORS_ALLOW_ORIGIN=*
       # returns a webp image if browser Accept headers match
@@ -27,7 +26,6 @@ services:
     environment:
       - THUMBOR_DOCKER_PROCS=${THUMBOR_DOCKER_PROCS:-1}
       - THUMBOR_NUM_PROCESSES=${THUMBOR_NUM_PROCESSES:-1}
-      - ENGINE_THREADPOOL_SIZE=${ENGINE_THREADPOOL_SIZE:-0}
     volumes:
       - ./scripts:/opt/scripts
       - ./reports:/opt/reports
@@ -41,7 +39,7 @@ services:
               --master
               --expect-slaves 3
               --only-summary
-              --csv=/opt/reports/${THUMBOR_DOCKER_PROCS}-${THUMBOR_NUM_PROCESSES}-${ENGINE_THREADPOOL_SIZE}"
+              --csv=/opt/reports/${THUMBOR_DOCKER_PROCS}-${THUMBOR_NUM_PROCESSES}"
   # this is the locust slave. We can control the number of slaves using docker-compose scale
   locust-slave:
     build:
