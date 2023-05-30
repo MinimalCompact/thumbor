@@ -18,6 +18,7 @@ RUN  \
         libgraphicsmagick++3 \
         libgraphicsmagick++1-dev \
         libgraphicsmagick-q16-3 \
+        libmagickwand-dev \
         zlib1g-dev \
         libboost-python-dev \
         libmemcached-dev \
