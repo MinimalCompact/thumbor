@@ -2,7 +2,7 @@
 set -e
 
 PLATFORM="linux/amd64"
-EXTRA_ARGUMENTS=""
+EXTRA_ARGUMENTS="--pull=false"
 while true; do
   case "$1" in
     ### Push requires authentication to minimalcompact docker hub
