@@ -87,8 +87,8 @@ PNG_COMPRESSION_LEVEL = {{ PNG_COMPRESSION_LEVEL | default(6) }}
 AUTO_WEBP = {{ AUTO_WEBP | default(False) }}
 
 ## Specifies whether non-transparent PNG images should be automatically converted to JPEG
-## Defaults to: False
-AUTO_PNG_TO_JPG = {{ AUTO_PNG_TO_JPG | default(False) }}
+## Defaults to: True
+AUTO_PNG_TO_JPG = {{ AUTO_PNG_TO_JPG | default(True) }}
 
 ## Specify the ratio between 1in and 1px for SVG images. This is only used
 ## whenrasterizing SVG images having their size units in cm or inches.
