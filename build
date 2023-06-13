@@ -1,82 +1,41 @@
 #!/bin/bash
 set -e
 
-PLATFORM="linux/amd64"
-EXTRA_ARGUMENTS=""
-while true; do
-  case "$1" in
-    ### Push requires authentication to minimalcompact docker hub
-    -p | --push)
-        EXTRA_ARGUMENTS="${EXTRA_ARGUMENTS} --push"
-        shift
-        ;;
-    -b | --branch)
-        BRANCH="$2";
-        shift 2
-        ;;
-    ### Images have issues building multi arch, so hold behind a feature flag
-    -m | --multiarch)
-        PLATFORM="${PLATFORM},linux/arm64"
-        shift
-        ;;
-    ## Create should be run once, or in ci, if docker buildx ls doesnt contain supported platforms
-    -c | --create)
-         docker buildx create --use
-         shift
-         ;;
-    -e | --extra )
-        EXTRA_ARGUMENTS="${EXTRA_ARGUMENTS} $2"
-        shift 2
-        ;;
-     * ) break ;;
-  esac
-done
-
-THUMBOR_VERSION=$(cat thumbor/requirements.txt| grep thumbor== | cut -d= -f 3)
-
-docker buildx version
-echo "Branch: ${BRANCH} | Thumbor version: ${THUMBOR_VERSION} | Platform: ${PLATFORM} | Extra Arguments: ${EXTRA_ARGUMENTS}"
-echo "*******************************************************"
-
-echo "--> BUILDING minimalcompact/thumbor-nginx-proxy-cache"
-[ "$BRANCH" == "master" ] && EXTRA_TAG="--tag ghcr.io/minimalcompact/thumbor-nginx-proxy-cache:latest"
-docker buildx build $EXTRA_ARGUMENTS --platform $PLATFORM -f nginx-proxy-cache/Dockerfile \
- --tag ghcr.io/minimalcompact/thumbor-nginx-proxy-cache:test \
- --tag ghcr.io/minimalcompact/thumbor-nginx-proxy-cache:$THUMBOR_VERSION \
- $EXTRA_TAG \
- nginx-proxy-cache/
-
 echo "--> BUILDING minimalcompact/thumbor"
-[ "$BRANCH" == "master" ] && EXTRA_TAG="--tag ghcr.io/minimalcompact/thumbor:latest"
-docker buildx build $EXTRA_ARGUMENTS --platform $PLATFORM -f thumbor/Dockerfile \
- --tag ghcr.io/minimalcompact/thumbor:test \
- --tag ghcr.io/minimalcompact/thumbor:$THUMBOR_VERSION \
-  $EXTRA_TAG \
- thumbor/
+docker build --pull -f thumbor/Dockerfile -t minimalcompact/thumbor thumbor/
+# introspecting version by running the built image
+THUMBOR_VERSION=`docker run --rm minimalcompact/thumbor bash -c "pip freeze |grep ^thumbor== | cut -d= -f 3"`
+echo "THUMBOR VERSION: $THUMBOR_VERSION"
+
+echo "--> TAGGING minimalcompact/thumbor:$THUMBOR_VERSION"
+docker tag minimalcompact/thumbor ghcr.io/minimalcompact/thumbor:$THUMBOR_VERSION
+echo "--> TAGGING minimalcompact/thumbor:latest"
+docker tag minimalcompact/thumbor ghcr.io/minimalcompact/thumbor:latest
 
 echo "--> BUILDING minimalcompact/thumbor:simd-sse4"
-[ "$BRANCH" == "master" ] && EXTRA_TAG="--tag ghcr.io/minimalcompact/thumbor:latest-simd-sse4t"
-## SSE doesnt support multi arch
-docker buildx build $EXTRA_ARGUMENTS --platform linux/amd64 --build-arg SIMD_LEVEL=sse4 -f thumbor/Dockerfile \
- --tag ghcr.io/minimalcompact/thumbor:$THUMBOR_VERSION-simd-sse4 \
- $EXTRA_TAG \
- thumbor/
+docker build --build-arg SIMD_LEVEL=sse4 -f thumbor/Dockerfile -t minimalcompact/thumbor-simd-sse4 thumbor/
+echo "--> TAGGING minimalcompact/thumbor:$THUMBOR_VERSION-simd-sse4"
+docker tag minimalcompact/thumbor-simd-sse4 ghcr.io/minimalcompact/thumbor:$THUMBOR_VERSION-simd-sse4
+echo "--> TAGGING minimalcompact/thumbor:latest-simd-sse4"
+docker tag minimalcompact/thumbor-simd-sse4 ghcr.io/minimalcompact/thumbor:latest-simd-sse4
 
 echo "--> BUILDING minimalcompact/thumbor:simd-avx2"
-[ "$BRANCH" == "master" ] && EXTRA_TAG="--tag ghcr.io/minimalcompact/thumbor:latest-simd-avx2"
-## AVX2 Doesnt support multi arch
-docker buildx build $EXTRA_ARGUMENTS --platform linux/amd64 --build-arg SIMD_LEVEL=avx2 -f thumbor/Dockerfile \
- --tag ghcr.io/minimalcompact/thumbor:$THUMBOR_VERSION-simd-avx2 \
- $EXTRA_TAG \
- thumbor/
+docker build --build-arg SIMD_LEVEL=avx2  -f thumbor/Dockerfile -t minimalcompact/thumbor-simd-avx2 thumbor/
+echo "--> TAGGING minimalcompact/thumbor:$THUMBOR_VERSION-simd-avx2"
+docker tag minimalcompact/thumbor-simd-avx2 ghcr.io/minimalcompact/thumbor:$THUMBOR_VERSION-simd-avx2
+echo "--> TAGGING minimalcompact/thumbor:latest-simd-avx2"
+docker tag minimalcompact/thumbor-simd-avx2 ghcr.io/minimalcompact/thumbor:latest-simd-avx2
+
+echo "--> BUILDING minimalcompact/thumbor-nginx-proxy-cache"
+docker build --pull -f nginx-proxy-cache/Dockerfile -t minimalcompact/thumbor-nginx-proxy-cache nginx-proxy-cache/
+echo "--> TAGGING minimalcompact/thumbor-nginx-proxy-cache:$THUMBOR_VERSION"
+docker tag minimalcompact/thumbor-nginx-proxy-cache ghcr.io/minimalcompact/thumbor-nginx-proxy-cache:$THUMBOR_VERSION
+echo "--> TAGGING minimalcompact/thumbor-nginx-proxy-cache:latest"
+docker tag minimalcompact/thumbor-nginx-proxy-cache ghcr.io/minimalcompact/thumbor-nginx-proxy-cache:latest
 
 echo "--> BUILDING minimalcompact/remotecv"
-[ "$BRANCH" == "master" ] && EXTRA_TAG="--tag ghcr.io/minimalcompact/remotecv:latest"
-docker buildx build $EXTRA_ARGUMENTS --platform $PLATFORM --build-arg THUMBOR_TAG=$THUMBOR_VERSION -f remotecv/Dockerfile \
- --tag ghcr.io/minimalcompact/remotecv:$THUMBOR_VERSION \
- $EXTRA_TAG \
- remotecv/
-
-echo "*******************************************************"
-echo Docker images:
-docker image ls -a
+docker build --build-arg THUMBOR_TAG=latest -f remotecv/Dockerfile -t minimalcompact/remotecv remotecv/
+echo "--> TAGGING minimalcompact/remotecv:$THUMBOR_VERSION"
+docker tag minimalcompact/remotecv ghcr.io/minimalcompact/remotecv:$THUMBOR_VERSION
+echo "--> TAGGING minimalcompact/remotecv:latest"
+docker tag minimalcompact/remotecv ghcr.io/minimalcompact/remotecv:latest
