@@ -11,5 +11,5 @@ cairosvg==2.5.2
 pycurl==7.45.2
 tc-aws==7.0.2
 tc-core==0.5
-thumbor==7.4.7
+thumbor==7.5.0
 thumbor-wand-engine==0.1.1
