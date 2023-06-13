@@ -24,7 +24,7 @@ jobs:
           echo "VERSION=$(cat thumbor/requirements.txt| grep thumbor== | cut -d= -f 3)" >> $GITHUB_OUTPUT
       - name: build images and load them for testing
         run: |
-          ./build --extra "--load --cache-from=type=gha,scope=build --cache-to=type=gha,scope=build" --branch "${GITHUB_REF_NAME}"
+          ./build
       - name: install bats
         run: |
           git clone https://github.com/bats-core/bats-core.git
@@ -48,4 +48,4 @@ jobs:
       - name: push when master
         if: github.ref == 'refs/heads/master'
         run: |
-          ./build --extra "--cache-from=type=gha,scope=build" --multiarch --push --branch master
+          ./push
