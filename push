@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# introspecting version by running the built image
+THUMBOR_VERSION=`docker run --rm minimalcompact/thumbor bash -c "pip freeze |grep ^thumbor== | cut -d= -f 3"`
+echo "THUMBOR VERSION: $THUMBOR_VERSION"
+
+echo "--> pushing minimalcompact/thumbor:simdsse4"
+docker push ghcr.io/minimalcompact/thumbor:latest-simd-sse4
+docker push ghcr.io/minimalcompact/thumbor:$THUMBOR_VERSION-simd-sse4
+
+echo "--> pushing minimalcompact/thumbor:simdavx2"
+docker push ghcr.io/minimalcompact/thumbor:latest-simd-avx2
+docker push ghcr.io/minimalcompact/thumbor:$THUMBOR_VERSION-simd-avx2
+
+echo "--> pushing minimalcompact/thumbor-nginx-proxy-cache"
+docker push ghcr.io/minimalcompact/thumbor-nginx-proxy-cache:latest
+docker push ghcr.io/minimalcompact/thumbor-nginx-proxy-cache:$THUMBOR_VERSION
+
+echo "--> pushing minimalcompact/remotecv"
+docker push ghcr.io/minimalcompact/remotecv:latest
+docker push ghcr.io/minimalcompact/remotecv:$THUMBOR_VERSION
+
+echo "--> pushing minimalcompact/thumbor"
+docker push ghcr.io/minimalcompact/thumbor:latest
+docker push ghcr.io/minimalcompact/thumbor:$THUMBOR_VERSION
