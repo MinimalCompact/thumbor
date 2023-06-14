@@ -33,7 +33,7 @@ jobs:
       - name: run bats tests
         uses: nick-fields/retry@v2
         with:
-          timeout_minutes: 10
+          timeout_minutes: 2
           max_attempts: 3
           command: |
             docker image ls -a
