@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # To disable warning libdc1394 error: Failed to initialize libdc1394
 ln -s /dev/null /dev/raw1394
