@@ -1,6 +1,6 @@
 FROM python:3.9
 
-LABEL maintainer="MinimalCompact"
+LABEL maintainer="Montro"
 
 VOLUME /data
 
@@ -30,7 +30,7 @@ ENV SHELL bash
 ENV WORKON_HOME /app
 WORKDIR /app
 
-RUN pip install thumbor==7.0.10
+RUN pip install thumbor==7.5.2
 COPY requirements.txt /app/requirements.txt
 RUN pip install --trusted-host None --no-cache-dir -r /app/requirements.txt
 RUN pip install --no-dependencies tc-aws==6.2.15
@@ -39,7 +39,7 @@ RUN pip install --no-dependencies tc-shortener==0.2.2
 
 RUN pip install thumbor_request_modifier==2.0.4
 RUN pip install tc_redis==2.3.0
-RUN pip install git+https://github.com/mbarouski/thumbor-prometheus.git@01c1a1f469f2b2379f66e8ccb8d9c3a72380c1ec
+RUN pip install tc_prometheus==2.0.0
 
 COPY conf/thumbor.conf.tpl /app/thumbor.conf.tpl
 
