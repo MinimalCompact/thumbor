@@ -5,7 +5,7 @@ tornado-botocore==1.5.0
 python-dateutil
 dateutils==0.6.12
 shortuuid==1.0.8
-redis==6.2.6
+redis==4.6.0
 raven==6.10.0
 cairosvg==2.7.0
 pycurl==7.45.2
