@@ -6,6 +6,7 @@ python-dateutil
 dateutils==0.6.12
 shortuuid==1.0.8
 redis==3.5.3
+opencv-python-headless==4.8.1.78
 raven==6.10.0
 cairosvg==2.5.2
 pycurl==7.45.2
