@@ -3,11 +3,11 @@
 BASE=tests/setup/basic
 
 teardown () {
-    docker-compose -f $BASE/docker-compose.yml down
+    docker compose -f $BASE/docker-compose.yml down
 }
 
 load_thumbor () {
-    docker-compose -f $BASE/docker-compose.yml up -d
+    docker compose -f $BASE/docker-compose.yml up -d
     timeout 2m bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:8888/healthcheck)" != "200" ]]; do sleep 5; done' || false
 }
 
