@@ -9,5 +9,6 @@ redis==5.0.1
 raven==6.10.0
 tc-aws==7.0.2
 tc-core==0.5
+tc_redis==2.5.0
 thumbor[all]==7.7.4
 thumbor-wand-engine==0.1.1
