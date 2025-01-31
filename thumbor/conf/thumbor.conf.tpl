@@ -526,7 +526,7 @@ META_CALLBACK_NAME = {{ META_CALLBACK_NAME | default(None) }}
 #'thumbor.detectors.queued_detector.queued_face_detector',
 #'thumbor.detectors.queued_detector.queued_feature_detector',
 #'thumbor.detectors.feature_detector',
-#'thumbor.detectors.face_detector',
+'thumbor.detectors.face_detector',
 #]
 DETECTORS = {{ DETECTORS | default([]) }}
 
