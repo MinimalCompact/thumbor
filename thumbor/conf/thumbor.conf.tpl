@@ -86,6 +86,26 @@ PNG_COMPRESSION_LEVEL = {{ PNG_COMPRESSION_LEVEL | default(6) }}
 ## Defaults to: False
 AUTO_WEBP = {{ AUTO_WEBP | default(False) }}
 
+## Specifies whether AVIF format should be used automatically if the request
+## accepts it (via Accept header) and pillow-avif-plugin is enabled
+## Defaults to: False
+AUTO_AVIF = {{ AUTO_AVIF | default(False) }}
+
+## Specifies whether JPG format should be used automatically if the request
+## accepts it (via Accept header)
+## Defaults to: False
+AUTO_JPG = {{ AUTO_JPG | default(False) }}
+
+## Specifies whether PNG format should be used automatically if the request
+## accepts it (via Accept header)
+## Defaults to: False
+AUTO_PNG = {{ AUTO_PNG | default(False) }}
+
+## Specifies whether HEIF format should be used automatically if the request
+## accepts it (via Accept header) and pillow-heif is enabled
+## Defaults to: False
+AUTO_HEIF = {{ AUTO_HEIF | default(False) }}
+
 ## Specifies whether non-transparent PNG images should be automatically converted to JPEG
 ## Defaults to: False
 AUTO_PNG_TO_JPG = {{ AUTO_PNG_TO_JPG | default(False) }}
